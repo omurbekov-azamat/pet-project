@@ -1,18 +1,10 @@
 import React from 'react';
 import {selectUser} from '../../../features/users/usersSlice';
 import {useAppSelector} from '../../../app/hooks';
-import { Link as NavLink } from 'react-router-dom';
-import { AppBar, Grid, styled, Toolbar, Typography } from '@mui/material';
+import { AppBar, Grid, Toolbar, Typography } from '@mui/material';
 import UserMenu from './UserMenu';
 import AnonymousMenu from './AnonymousMenu';
-
-const Link = styled(NavLink)({
-    color: 'inherit',
-    textDecoration: 'none',
-    '&:hover': {
-        color: 'inherit'
-    },
-});
+import {Link} from '../../../helpers';
 
 const AppToolbar = () => {
     const user = useAppSelector(selectUser);

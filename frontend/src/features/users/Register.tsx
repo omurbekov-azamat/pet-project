@@ -111,7 +111,6 @@ const Register = () => {
                                 onChange={fileInputChangeHandler}
                                 name='image'
                                 type='images/*'
-                                error={error}
                                 margin='110px'
                             />
                         </Grid>

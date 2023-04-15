@@ -35,10 +35,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
         type: String,
         required: true,
     },
-    avatar: {
-        type: String,
-        required: true,
-    },
+    avatar: String,
     token: {
         type: String,
         required: true,

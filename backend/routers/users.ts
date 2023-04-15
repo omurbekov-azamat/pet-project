@@ -3,7 +3,7 @@ import {promises as fs} from "fs";
 import {Error} from "mongoose";
 import {imagesUpload} from '../multer';
 import crypto from "crypto";
-import User from '../modules/User';
+import User from '../models/User';
 
 const usersRouter = express.Router();
 

@@ -1,9 +1,12 @@
 import React from 'react';
-import ListGroup from '../components/UI/ListGroup/ListGroup';
 import BasicBreadcrumbs from '../components/UI/Breadcrumbs/BasicBreadcrumbs';
+import {useParams} from 'react-router-dom';
+import ListGroup from '../components/UI/ListGroup/ListGroup';
 import {Grid} from '@mui/material';
+import Development from './Development';
 
 const Dashboard = () => {
+    const {listName} = useParams() as { listName: string };
     return (
         <>
             <Grid container>
@@ -11,7 +14,14 @@ const Dashboard = () => {
                     <ListGroup/>
                 </Grid>
                 <Grid item>
-                    <BasicBreadcrumbs/>
+                    <Grid container flexDirection='column'>
+                        <Grid item>
+                            <BasicBreadcrumbs/>
+                        </Grid>
+                        <Grid item mt={2}>
+                            <Development dashboard={listName}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         </>

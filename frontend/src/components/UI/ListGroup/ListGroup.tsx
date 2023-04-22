@@ -10,7 +10,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import GroupsIcon from '@mui/icons-material/Groups';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Divider from '@mui/material/Divider';
 
@@ -42,14 +41,6 @@ const ListGroup = () => {
                                 <AccountTreeIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Projects"/>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => moveBread('group')}>
-                            <ListItemIcon>
-                                <GroupsIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Group"/>
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>

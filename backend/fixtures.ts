@@ -3,8 +3,6 @@ import config from './config';
 import User from './models/User';
 import crypto from 'crypto';
 import Project from './models/Project';
-import Manager from './models/Manager';
-import Developer from './models/Developer';
 
 const run = async () => {
     mongoose.set('strictQuery', false);
@@ -14,6 +12,7 @@ const run = async () => {
     try {
         await db.dropCollection('users');
         await db.dropCollection('projects');
+        await db.dropCollection('tasks');
     } catch (e) {
         console.log('Collections were not present')
     }
@@ -23,6 +22,7 @@ const run = async () => {
         password: '123',
         displayName: 'Максим',
         token: crypto.randomUUID(),
+        role: 'manager'
     }, {
         email: 'user2@gmail.com',
         password: '123',
@@ -30,28 +30,15 @@ const run = async () => {
         token: crypto.randomUUID(),
     });
 
-    const [booking, shop] = await Project.create({
-        owner: userOne._id,
-        projectName: 'Booking',
+    await Project.create({
+        name: 'Booking',
+        description: 'Create booking website',
+        manager: userOne._id,
     }, {
-        owner: userTwo._id,
-        projectName: 'Shop',
-    });
-
-    await Manager.create({
-        project: booking._id,
-        projectManager: userTwo._id,
-    }, {
-        project: shop._id,
-        projectManager: userTwo._id,
-    });
-
-    await Developer.create({
-        project: booking._id,
-        projectDeveloper: userOne._id,
-    }, {
-        project: shop._id,
-        projectDeveloper: userTwo._id,
+        name: 'Shop',
+        description: 'Create shop website',
+        manager: userOne._id,
+        developers: [userTwo._id]
     });
 
     await db.close();

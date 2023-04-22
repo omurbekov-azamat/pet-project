@@ -2,8 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import auth, {RequestWithUser} from '../middleware/auth';
 import Project from '../models/Project';
-import Manager from '../models/Manager';
-import Developer from '../models/Developer';
+import Task from '../models/Task';
 
 const projectsRouter = express.Router();
 
@@ -11,8 +10,10 @@ projectsRouter.post('/', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
     try {
         const project = await Project.create({
-            owner: user._id,
-            projectName: req.body.projectName,
+            name: req.body.name,
+            description: req.body.description,
+            manager: user._id,
+            developers: req.body.developers,
         });
         return res.send({message: 'Created successfully', project});
     } catch (e) {
@@ -27,16 +28,48 @@ projectsRouter.post('/', auth, async (req, res, next) => {
 projectsRouter.get('/', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
     try {
-        const projects = await Project.find({owner: user._id});
-        const managers = await Manager.find({projectManager: user._id}).populate('project');
-        const developers = await Developer.find({projectDeveloper: user._id}).populate('project');
+        if (user.role === 'developer') {
+            const projects = await Project.find({
+                developers: {$in: [user._id]}
+            }).populate('manager', ['displayName']);
 
-        const projectsData = {
-            projects,
-            managers,
-            developers,
+            if (projects.length <= 0) {
+                return res.send({message: "You don't have projects!"});
+            }
+            return res.send(projects);
+        } else {
+            const projects = await Project.find({manager: user._id});
+
+            if (projects.length <= 0) {
+                return res.send({message: "You don't have projects!"});
+            }
+            return res.send(projects);
         }
-        return res.send(projectsData);
+    } catch (e) {
+        return next(e);
+    }
+});
+
+projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) => {
+    const user = (req as RequestWithUser).user;
+    const projectId = req.params.id;
+    try {
+        const foundProject = await Project.findOne({
+            manager: user._id,
+            _id: projectId,
+        });
+
+        if (!foundProject) {
+            return res.send({error: 'Projects are not found!'});
+        }
+
+        if (foundProject.developers.includes(req.body.developerId)) {
+            return res.send({message: 'This developer is already in the project!'});
+        } else {
+            foundProject.developers.push(req.body.developerId);
+            foundProject.save();
+            return res.send({message: 'You have added a new developer!'});
+        }
     } catch (e) {
         return next(e);
     }
@@ -44,19 +77,21 @@ projectsRouter.get('/', auth, async (req, res, next) => {
 
 projectsRouter.delete('/:id', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
-    const project = await Project.findById(req.params.id);
-    if (!project) {
-        return res.status(404).send({error: 'Project is not found'});
-    }
     try {
-        if (project.owner.toString() === user._id.toString()) {
-            await Project.deleteOne(project._id);
-            return res.send({message: 'Delete was successfully'});
-        } else {
-            return res.send({message: 'Sorry you can not delete project, Its not yours!'});
+        const foundProject = await Project.findOne({
+            manager: user._id,
+            _id: req.params.id,
+        });
+
+        if (!foundProject) {
+            return res.send({error: 'Projects are not found!'});
         }
+
+        await Task.deleteMany({project: foundProject._id});
+        await Project.deleteOne(foundProject._id);
+        return res.send({message: 'Project has been successfully deleted!'});
     } catch (e) {
-        return next(e);
+        next(e);
     }
 });
 

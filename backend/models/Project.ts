@@ -3,7 +3,12 @@ import User from './User';
 import {IProject} from '../types';
 
 const ProjectSchema = new Schema<IProject>({
-    owner: {
+    name: {
+        type: String,
+        required: true,
+    },
+    description: String,
+    manager: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -12,9 +17,8 @@ const ProjectSchema = new Schema<IProject>({
             message: 'User does not exist',
         },
     },
-    projectName: {
-        type: String,
-        required: true,
+    developers: {
+        type: [{type: Schema.Types.ObjectId, ref: 'User'}],
     },
 });
 

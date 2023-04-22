@@ -1,9 +1,14 @@
 import {model, Schema, Types} from 'mongoose';
-import {IManager} from '../types';
-import Project from './Project';
 import User from './User';
+import Project from './Project';
+import {ITask} from '../types';
 
-const ManagerSchema = new Schema<IManager>({
+const TaskSchema = new Schema<ITask>({
+    name: {
+        type: String,
+        required: true,
+    },
+    description: String,
     project: {
         type: Schema.Types.ObjectId,
         ref: 'Project',
@@ -13,17 +18,21 @@ const ManagerSchema = new Schema<IManager>({
             message: 'Project does not exist',
         },
     },
-    projectManager: {
+    developer: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
         validate: {
             validator: async (value: Types.ObjectId) => User.findById(value),
             message: 'User does not exist',
-        },
-    }
+        }
+    },
+    status: {
+        type: String,
+        enum: ['new', 'in progress', 'done'],
+        default: 'new',
+    },
 });
 
-const Manager = model<IManager>('Manager', ManagerSchema);
+const Task = model<ITask>('Task', TaskSchema);
 
-export default Manager;
+export default Task;

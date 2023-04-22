@@ -7,19 +7,20 @@ export interface IUser {
     displayName: string;
     googleId?: string;
     avatar: string | null;
+    role: string;
 }
 
 export interface IProject {
-    owner: ObjectId;
-    projectName: string;
+    name: string;
+    description: string;
+    manager: ObjectId;
+    developers: ObjectId[];
 }
 
-export interface IManager {
+export interface ITask {
+    name: String;
+    description: string;
     project: ObjectId;
-    projectManager: ObjectId;
-}
-
-export interface IDeveloper {
-    project: ObjectId;
-    projectDeveloper: ObjectId;
+    developer: ObjectId;
+    status: 'new' | 'in progress' | 'done';
 }

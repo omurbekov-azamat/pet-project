@@ -10,7 +10,7 @@ interface IUserMethods {
     checkPassword(password: string): Promise<boolean>;
 }
 
-type UserModel = Model<IUser, {}, IUserMethods>
+type UserModel = Model<IUser, {}, IUserMethods>;
 
 const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     email: {
@@ -41,6 +41,11 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
         required: true,
     },
     googleId: String,
+    role: {
+        type: String,
+        enum: ['developer', 'manager'],
+        default: 'developer',
+    },
 });
 
 UserSchema.pre('save', async function (next) {

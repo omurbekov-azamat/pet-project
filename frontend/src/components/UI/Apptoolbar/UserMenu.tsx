@@ -17,6 +17,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -38,7 +39,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
         <>
             <Grid container>
                 <Grid item>
-                    <Avatar alt={user.displayName} src={apiURL + '/' + user.avatar}/>
+                    <Avatar alt={user.displayName} src={user.avatar && apiURL + '/' + user.avatar}/>
                 </Grid>
                 <Grid item>
                     <Button

@@ -39,3 +39,16 @@ export interface LoginMutation {
     email: string;
     password: string;
 }
+
+export interface Manager {
+    displayName: string;
+    _id: string;
+}
+
+export interface Project {
+    description: string;
+    developers: string[];
+    manager: Manager;
+    name: string;
+    _id: string;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import Projects from '../features/projects/Projects';
 
 interface Props {
     dashboard: string;
@@ -7,7 +8,9 @@ interface Props {
 const Development: React.FC<Props> = ({dashboard}) => {
     return (
         <>
-            {dashboard}
+            {dashboard ? dashboard === 'projects' &&
+                <Projects dashboard={dashboard}/> : <Projects dashboard={dashboard}/>
+            }
         </>
     );
 };

@@ -1,12 +1,18 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
+import {getProjects} from './projectsThunks';
+import {Project} from '../../types';
 
 interface ProjectsState {
     breadcrumbs: string;
+    getProjectsLoading: boolean;
+    projects: Project[];
 }
 
 const initialState: ProjectsState = {
-    breadcrumbs: 'Projects'
+    breadcrumbs: 'Projects',
+    getProjectsLoading: false,
+    projects: [],
 }
 
 export const projectsSlice = createSlice({
@@ -17,6 +23,18 @@ export const projectsSlice = createSlice({
             state.breadcrumbs = string;
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(getProjects.pending, (state) => {
+            state.getProjectsLoading = true;
+        });
+        builder.addCase(getProjects.fulfilled, (state, {payload: projects}) => {
+            state.getProjectsLoading = false;
+            state.projects = projects;
+        });
+        builder.addCase(getProjects.rejected, (state) => {
+            state.getProjectsLoading = false;
+        });
+    }
 });
 
 export const projectsReducer = projectsSlice.reducer;

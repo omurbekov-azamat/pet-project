@@ -2,15 +2,16 @@ import React, {useEffect} from 'react';
 import {selectFetchProjectsLoading, selectProjects} from '../projectsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {getProjects} from '../projectsThunks';
-import {Badge, Typography} from '@mui/material';
-import Divider from '@mui/material/Divider';
+import {Box, Typography} from '@mui/material';
 import ProjectItems from './ProjectItems';
 
 export interface Props {
-    dashboard: string | undefined;
+    dashboard: string;
+    managerName: string;
+    projectName: string;
 }
 
-const Projects: React.FC<Props> = ({dashboard}) => {
+const Projects: React.FC<Props> = ({dashboard, projectName, managerName}) => {
     const dispatch = useAppDispatch();
     const loading = useAppSelector(selectFetchProjectsLoading);
     const projects = useAppSelector(selectProjects);
@@ -19,21 +20,16 @@ const Projects: React.FC<Props> = ({dashboard}) => {
         dispatch(getProjects());
     }, [dispatch, dashboard]);
 
+    let showProject = projects.length > 0 && <ProjectItems/>
+
+    if (projectName && managerName) {
+        showProject = <Box>Test</Box>
+    }
+
     return (
         <>
-            <Typography component='div' variant='h5' fontWeight='bolder'>Projects</Typography>
             {loading && <Typography>loading...</Typography>}
-            {projects.length > 0 &&
-                <>
-                    <Typography>
-                        <Badge badgeContent={projects.length} color="error" sx={{mt: 3}}>
-                            Yours
-                        </Badge>
-                    </Typography>
-                    <Divider sx={{mt: 0.5}}/>
-                </>
-            }
-            <ProjectItems/>
+            {showProject}
         </>
     );
 };

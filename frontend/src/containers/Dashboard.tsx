@@ -7,24 +7,29 @@ import Development from './Development';
 
 const Dashboard = () => {
     const {listName} = useParams() as { listName: string };
+    const {managerName} = useParams() as { managerName: string };
+    const {projectName} = useParams() as { projectName: string };
+
     return (
-        <>
-            <Grid container>
-                <Grid item xs={11} sm={4} lg={3} xl={3}>
-                    <ListGroup/>
-                </Grid>
-                <Grid item xs>
-                    <Grid container flexDirection='column'>
-                        <Grid item>
-                            <BasicBreadcrumbs/>
-                        </Grid>
-                        <Grid item mt={2}>
-                            <Development dashboard={listName}/>
-                        </Grid>
+        <Grid container>
+            <Grid item xs={11} sm={4} lg={3} xl={3}>
+                <ListGroup projectName={projectName}/>
+            </Grid>
+            <Grid item xs>
+                <Grid container flexDirection='column'>
+                    <Grid item>
+                        <BasicBreadcrumbs projectName={projectName} managerName={managerName}/>
+                    </Grid>
+                    <Grid item mt={2}>
+                        <Development
+                            dashboard={listName ? listName : 'projects'}
+                            projectName={projectName}
+                            managerName={managerName}
+                        />
                     </Grid>
                 </Grid>
             </Grid>
-        </>
+        </Grid>
     );
 };
 

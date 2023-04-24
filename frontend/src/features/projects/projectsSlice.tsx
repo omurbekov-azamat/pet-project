@@ -25,6 +25,7 @@ export const projectsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getProjects.pending, (state) => {
+            state.projects = [];
             state.getProjectsLoading = true;
         });
         builder.addCase(getProjects.fulfilled, (state, {payload: projects}) => {
@@ -41,3 +42,5 @@ export const projectsReducer = projectsSlice.reducer;
 
 export const {moveBreadcrumbs} = projectsSlice.actions;
 export const selectBreadcrumb = (state: RootState) => state.projects.breadcrumbs;
+export const selectFetchProjectsLoading = (state: RootState) => state.projects.getProjectsLoading;
+export const selectProjects = (state: RootState) => state.projects.projects;

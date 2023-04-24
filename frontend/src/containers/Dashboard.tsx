@@ -10,10 +10,10 @@ const Dashboard = () => {
     return (
         <>
             <Grid container>
-                <Grid item>
+                <Grid item xs={11} sm={4} lg={3} xl={3}>
                     <ListGroup/>
                 </Grid>
-                <Grid item>
+                <Grid item xs>
                     <Grid container flexDirection='column'>
                         <Grid item>
                             <BasicBreadcrumbs/>

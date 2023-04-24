@@ -38,7 +38,7 @@ projectsRouter.get('/', auth, async (req, res, next) => {
             }
             return res.send(projects);
         } else {
-            const projects = await Project.find({manager: user._id});
+            const projects = await Project.find({manager: user._id}).populate('manager', ['displayName']);
 
             if (projects.length <= 0) {
                 return res.send({message: "You don't have projects!"});

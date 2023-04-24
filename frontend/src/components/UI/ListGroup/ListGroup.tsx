@@ -11,7 +11,6 @@ import ListItemText from '@mui/material/ListItemText';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import Divider from '@mui/material/Divider';
 
 const ListGroup = () => {
     const dispatch = useAppDispatch();
@@ -24,7 +23,7 @@ const ListGroup = () => {
     }
 
     return (
-        <Box sx={{width: '100%', minWidth: 300, bgcolor: 'background.paper'}}>
+        <Box sx={{width: '100%', minWidth: 200, bgcolor: 'background.paper'}}>
             <nav aria-label="main mailbox folders">
                 <List>
                     <ListItem disablePadding>
@@ -53,7 +52,6 @@ const ListGroup = () => {
                     </ListItem>
                 </List>
             </nav>
-            <Divider/>
         </Box>
     );
 };

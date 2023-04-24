@@ -1,5 +1,5 @@
 import React from 'react';
-import Projects from '../features/projects/Projects';
+import Projects from '../features/projects/components/Projects';
 
 interface Props {
     dashboard: string;

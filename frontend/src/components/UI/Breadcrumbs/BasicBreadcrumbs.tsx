@@ -14,7 +14,7 @@ const BasicBreadcrumbs = () => {
                 <Link to='/'>Your work</Link>
                 <Typography color="text.primary" textTransform='capitalize'>{breadcrumb}</Typography>
             </Breadcrumbs>
-            <Divider/>
+            <Divider sx={{mt: 0.5}}/>
         </>
     );
 };

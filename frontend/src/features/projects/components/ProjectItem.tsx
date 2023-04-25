@@ -15,7 +15,7 @@ const ProjectItem: React.FC<Props> = ({item}) => {
     const role = user && user.role === 'manager' ? 'Manager' : 'Developer';
 
     const handleClick = () => {
-        navigate('/' + item.manager.displayName + '/' + item.name);
+        navigate('/' + item.manager.displayName + '/' + item.name + '/' + item._id);
     };
 
     return (

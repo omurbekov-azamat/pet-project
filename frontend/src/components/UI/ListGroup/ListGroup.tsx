@@ -32,16 +32,34 @@ const ListGroup: React.FC<Props> = ({projectName}) => {
             <nav aria-label="main mailbox folders">
                 <List>
                     {projectName ? (
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <Avatar
-                                    sx={{background: 'lightBlue', borderRadius: '5px', mr: 3, ml: -1}}
-                                >
-                                    {projectName[0]}
-                                </Avatar>
-                                {projectName}
-                            </ListItemButton>
-                        </ListItem>
+                        <>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <Avatar
+                                        sx={{background: 'lightBlue', borderRadius: '5px', mr: 3, ml: -1}}
+                                    >
+                                        {projectName[0]}
+                                    </Avatar>
+                                    {projectName}
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <AccountTreeIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Project information"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <DraftsIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Issues"/>
+                                </ListItemButton>
+                            </ListItem>
+                        </>
                     ) : (
                         <>
                             <ListItem disablePadding>
@@ -60,16 +78,16 @@ const ListGroup: React.FC<Props> = ({projectName}) => {
                                     <ListItemText primary="Projects"/>
                                 </ListItemButton>
                             </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton onClick={() => moveBread('issues')}>
+                                    <ListItemIcon>
+                                        <DraftsIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Issues"/>
+                                </ListItemButton>
+                            </ListItem>
                         </>
                     )}
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => moveBread('issues')}>
-                            <ListItemIcon>
-                                <DraftsIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Issues"/>
-                        </ListItemButton>
-                    </ListItem>
                 </List>
             </nav>
         </Box>

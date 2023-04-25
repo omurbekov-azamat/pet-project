@@ -50,6 +50,35 @@ projectsRouter.get('/', auth, async (req, res, next) => {
     }
 });
 
+projectsRouter.get('/:id', auth, async (req, res, next) => {
+    const user = (req as RequestWithUser).user;
+    try {
+        if (user.role === 'developer') {
+            const projects = await Project.find({
+                _id: req.params.id,
+                developers: {$in: [user._id]}
+            }).populate('manager', ['displayName']);
+
+            if (projects.length <= 0) {
+                return res.send({message: "You don't have projects!"});
+            }
+            return res.send(projects);
+        } else {
+            const projects = await Project.find({
+                manager: user._id,
+                _id: req.params.id
+            }).populate('manager', ['displayName']);
+
+            if (projects.length <= 0) {
+                return res.send({message: "You don't have projects!"});
+            }
+            return res.send(projects);
+        }
+    } catch (e) {
+        return next(e);
+    }
+});
+
 projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
     const projectId = req.params.id;

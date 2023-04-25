@@ -13,3 +13,17 @@ export const getProjects = createAsyncThunk<Project[]>(
         }
     }
 );
+
+export const getProject = createAsyncThunk<Project, string>(
+    'projects/fetchProject',
+    async (id) => {
+        try {
+            if (id) {
+                const responseProject = await axiosApi.get('/projects/' + id);
+                return responseProject.data;
+            }
+        } catch (e) {
+            throw e;
+        }
+    }
+);

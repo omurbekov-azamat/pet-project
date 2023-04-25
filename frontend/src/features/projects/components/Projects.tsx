@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {selectFetchProjectsLoading, selectProjects} from '../projectsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {getProjects} from '../projectsThunks';
+import {getProject, getProjects} from '../projectsThunks';
 import {Box, Typography} from '@mui/material';
 import ProjectItems from './ProjectItems';
 
@@ -9,21 +9,28 @@ export interface Props {
     dashboard: string;
     managerName: string;
     projectName: string;
+    projectId: string;
 }
 
-const Projects: React.FC<Props> = ({dashboard, projectName, managerName}) => {
+const Projects: React.FC<Props> = ({dashboard, projectName, managerName, projectId}) => {
     const dispatch = useAppDispatch();
     const loading = useAppSelector(selectFetchProjectsLoading);
     const projects = useAppSelector(selectProjects);
 
     useEffect(() => {
-        dispatch(getProjects());
-    }, [dispatch, dashboard]);
+        if (!projectId) {
+            dispatch(getProjects());
+        }
+    }, [dispatch, dashboard, projectId]);
+
+    useEffect(() => {
+        dispatch(getProject(projectId));
+    }, [dispatch, projectId]);
 
     let showProject = projects.length > 0 && <ProjectItems/>
 
     if (projectName && managerName) {
-        showProject = <Box>Test</Box>
+        showProject = <Box>test</Box>
     }
 
     return (

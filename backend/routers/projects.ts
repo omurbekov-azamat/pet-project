@@ -72,7 +72,7 @@ projectsRouter.get('/:id', auth, async (req, res, next) => {
             if (projects.length <= 0) {
                 return res.send({message: "You don't have projects!"});
             }
-            return res.send(projects);
+            return res.send(projects[0]);
         }
     } catch (e) {
         return next(e);

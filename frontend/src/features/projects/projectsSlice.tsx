@@ -1,18 +1,22 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {getProjects} from './projectsThunks';
+import {getProject, getProjects} from './projectsThunks';
 import {Project} from '../../types';
 
 interface ProjectsState {
     breadcrumbs: string;
     getProjectsLoading: boolean;
     projects: Project[];
+    getProjectLoading: boolean;
+    project: Project | null;
 }
 
 const initialState: ProjectsState = {
     breadcrumbs: 'Projects',
     getProjectsLoading: false,
     projects: [],
+    getProjectLoading: false,
+    project: null,
 }
 
 export const projectsSlice = createSlice({
@@ -35,6 +39,17 @@ export const projectsSlice = createSlice({
         builder.addCase(getProjects.rejected, (state) => {
             state.getProjectsLoading = false;
         });
+        builder.addCase(getProject.pending, (state) => {
+            state.project = null;
+            state.getProjectLoading = true;
+        });
+        builder.addCase(getProject.fulfilled, (state, {payload: project}) => {
+            state.getProjectLoading = false;
+            state.project = project;
+        });
+        builder.addCase(getProject.rejected, (state) => {
+            state.getProjectLoading = false;
+        });
     }
 });
 
@@ -44,3 +59,5 @@ export const {moveBreadcrumbs} = projectsSlice.actions;
 export const selectBreadcrumb = (state: RootState) => state.projects.breadcrumbs;
 export const selectFetchProjectsLoading = (state: RootState) => state.projects.getProjectsLoading;
 export const selectProjects = (state: RootState) => state.projects.projects;
+export const selectFetchProjectLoading = (state: RootState) => state.projects.getProjectLoading;
+export const selectProject = (state: RootState) => state.projects.project;

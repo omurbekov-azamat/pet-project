@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {selectFetchProjectsLoading, selectProjects} from '../projectsSlice';
+import {selectFetchProjectLoading, selectFetchProjectsLoading, selectProject, selectProjects} from '../projectsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {getProject, getProjects} from '../projectsThunks';
 import {Box, Typography} from '@mui/material';
@@ -14,8 +14,10 @@ export interface Props {
 
 const Projects: React.FC<Props> = ({dashboard, projectName, managerName, projectId}) => {
     const dispatch = useAppDispatch();
-    const loading = useAppSelector(selectFetchProjectsLoading);
+    const projectsLoading = useAppSelector(selectFetchProjectsLoading);
+    const projectLoading = useAppSelector(selectFetchProjectLoading);
     const projects = useAppSelector(selectProjects);
+    const project = useAppSelector(selectProject);
 
     useEffect(() => {
         if (!projectId) {
@@ -30,12 +32,13 @@ const Projects: React.FC<Props> = ({dashboard, projectName, managerName, project
     let showProject = projects.length > 0 && <ProjectItems/>
 
     if (projectName && managerName) {
-        showProject = <Box>test</Box>
+        showProject = <Box>{project?.description}</Box>
     }
 
     return (
         <>
-            {loading && <Typography>loading...</Typography>}
+            {projectsLoading && <Typography>loading...</Typography>}
+            {projectLoading && <Typography>loading...</Typography>}
             {showProject}
         </>
     );

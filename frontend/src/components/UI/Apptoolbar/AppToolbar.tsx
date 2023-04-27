@@ -10,7 +10,7 @@ const AppToolbar = () => {
     const user = useAppSelector(selectUser);
 
     return (
-        <AppBar position="sticky" sx={{mb: 2, background: 'lightcoral'}}>
+        <AppBar position="sticky" sx={{background: '#292961;'}}>
             <Toolbar>
                 <Grid container justifyContent="space-between" alignItems="center">
                     <Typography variant="h6" component="div">

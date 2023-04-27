@@ -2,8 +2,9 @@ import React, {useEffect} from 'react';
 import {selectFetchProjectLoading, selectFetchProjectsLoading, selectProject, selectProjects} from '../projectsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {getProject, getProjects} from '../projectsThunks';
-import {Box, Typography} from '@mui/material';
+import {Avatar, Box, Grid, LinearProgress, Typography} from '@mui/material';
 import ProjectItems from './ProjectItems';
+import ProjectReadMe from './ProjectReadMe';
 
 export interface Props {
     dashboard: string;
@@ -32,7 +33,29 @@ const Projects: React.FC<Props> = ({dashboard, projectName, managerName, project
     let showProject = projects.length > 0 && <ProjectItems/>
 
     if (projectName && managerName) {
-        showProject = <Box>{project?.description}</Box>
+        showProject = <Box>
+            <Grid container alignItems='center' mb={1}>
+                <Grid item>
+                    <Avatar
+                        sx={{background: 'lightBlue', borderRadius: '5px', mr: 2}}
+                    >
+                        {project?.name[0]}
+                    </Avatar>
+                </Grid>
+                <Grid item>
+                    <Grid container flexDirection='column'>
+                        <Grid item>
+                            <Typography fontWeight='bolder'>{project?.name}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant='subtitle2'>Project ID: {project?._id}</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <LinearProgress color="error"/>
+            {project && <ProjectReadMe project={project}/>}
+        </Box>
     }
 
     return (

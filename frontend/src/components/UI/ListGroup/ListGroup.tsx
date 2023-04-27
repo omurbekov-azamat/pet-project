@@ -28,7 +28,12 @@ const ListGroup: React.FC<Props> = ({projectName}) => {
     }
 
     return (
-        <Box sx={{width: '100%', minWidth: 200, bgcolor: 'background.paper'}}>
+        <Box sx={{
+            minWidth: 200,
+            height: '100%',
+            minHeight: '850px',
+            background: '#fbfafd;',
+        }} borderRadius={2} mx={1}>
             <nav aria-label="main mailbox folders">
                 <List>
                     {projectName ? (

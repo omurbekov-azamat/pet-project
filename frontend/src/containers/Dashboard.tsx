@@ -10,7 +10,7 @@ const Dashboard = () => {
 
     return (
         <Grid container>
-            <Grid item xs={11} sm={4} lg={3} xl={3}>
+            <Grid item xs={11} sm={5} lg={3} xl={3}>
                 <ListGroup projectName={catchParams.projectName}/>
             </Grid>
             <Grid item xs>

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {getProject, getProjects} from './projectsThunks';
-import {Project} from '../../types';
+import {createProject, getProject, getProjects} from './projectsThunks';
+import {Project, ValidationError} from '../../types';
 
 interface ProjectsState {
     breadcrumbs: string;
@@ -9,6 +9,8 @@ interface ProjectsState {
     projects: Project[];
     getProjectLoading: boolean;
     project: Project | null;
+    createProjectLoading: boolean;
+    createProjectError: ValidationError | null;
 }
 
 const initialState: ProjectsState = {
@@ -17,6 +19,8 @@ const initialState: ProjectsState = {
     projects: [],
     getProjectLoading: false,
     project: null,
+    createProjectLoading: false,
+    createProjectError: null,
 }
 
 export const projectsSlice = createSlice({
@@ -50,7 +54,18 @@ export const projectsSlice = createSlice({
         builder.addCase(getProject.rejected, (state) => {
             state.getProjectLoading = false;
         });
-    }
+        builder.addCase(createProject.pending, (state) => {
+            state.createProjectError = null;
+            state.createProjectLoading = true;
+        });
+        builder.addCase(createProject.fulfilled, (state) => {
+            state.createProjectLoading = false;
+        });
+        builder.addCase(createProject.rejected, (state, {payload: error}) => {
+            state.createProjectLoading = false;
+            state.createProjectError = error || null;
+        });
+    },
 });
 
 export const projectsReducer = projectsSlice.reducer;
@@ -61,3 +76,5 @@ export const selectFetchProjectsLoading = (state: RootState) => state.projects.g
 export const selectProjects = (state: RootState) => state.projects.projects;
 export const selectFetchProjectLoading = (state: RootState) => state.projects.getProjectLoading;
 export const selectProject = (state: RootState) => state.projects.project;
+export const selectCreateProjectLoading = (state: RootState) => state.projects.createProjectLoading;
+export const selectCreateProjectError = (state: RootState) => state.projects.createProjectError;

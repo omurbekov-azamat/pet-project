@@ -45,6 +45,11 @@ export interface Manager {
     _id: string;
 }
 
+export interface ProjectMutation {
+    name: string;
+    description: string;
+}
+
 export interface Project {
     description: string;
     developers: string[];

@@ -1,6 +1,21 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
-import {Project} from '../../types';
+import {isAxiosError} from 'axios';
+import {Project, ProjectMutation, ValidationError} from '../../types';
+
+export const createProject = createAsyncThunk<void, ProjectMutation, { rejectValue: ValidationError }>(
+    'projects/createProject',
+    async (projectData, {rejectWithValue}) => {
+        try {
+            await axiosApi.post('/projects', projectData);
+        } catch (e) {
+            if (isAxiosError(e) && e.response && e.response.status === 400) {
+                return rejectWithValue(e.response.data as ValidationError);
+            }
+            throw e;
+        }
+    }
+);
 
 export const getProjects = createAsyncThunk<Project[]>(
     'projects/fetchProjects',

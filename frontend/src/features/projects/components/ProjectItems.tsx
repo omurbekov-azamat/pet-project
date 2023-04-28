@@ -1,15 +1,34 @@
 import React from 'react';
-import {useAppSelector} from '../../../app/hooks';
-import {selectProjects} from '../projectsSlice';
+import {useNavigate} from 'react-router-dom';
+import {moveBreadcrumbs, selectProjects} from '../projectsSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {selectUser} from '../../users/usersSlice';
+import {Badge, Button, Grid, Typography} from '@mui/material';
 import ProjectItem from './ProjectItem';
-import {Badge, Grid, Typography} from '@mui/material';
 import Divider from '@mui/material/Divider';
 
 const ProjectItems = () => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const projects = useAppSelector(selectProjects);
+    const user = useAppSelector(selectUser);
+
+    const onClickHandler = () => {
+        dispatch(moveBreadcrumbs('New project'));
+        navigate('/dashboard/new-project');
+    };
+
     return (
         <>
-            <Typography component='div' variant='h5' fontWeight='bolder'>Projects</Typography>
+            <Grid container alignItems='center' justifyContent='space-between'>
+                <Grid item>
+                    <Typography component='div' variant='h5' fontWeight='bolder'>Projects</Typography>
+                </Grid>
+                <Grid item>
+                    {user && user.role === 'manager' &&
+                        <Button variant='contained' onClick={onClickHandler}>new project</Button>}
+                </Grid>
+            </Grid>
             <Typography>
                 <Badge badgeContent={projects.length} color="error" sx={{mt: 3}}>
                     Yours
@@ -22,7 +41,8 @@ const ProjectItems = () => {
                 ))}
             </Grid>
         </>
-    );
+    )
+        ;
 };
 
 export default ProjectItems;

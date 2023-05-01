@@ -12,12 +12,13 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import {Avatar} from '@mui/material';
+import {Params} from '../../../types';
 
 interface Props {
-    projectName: string;
+    catchParams: Params;
 }
 
-const ListGroup: React.FC<Props> = ({projectName}) => {
+const ListGroup: React.FC<Props> = ({catchParams}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -36,20 +37,22 @@ const ListGroup: React.FC<Props> = ({projectName}) => {
         }} borderRadius={2} mx={1}>
             <nav aria-label="main mailbox folders">
                 <List>
-                    {projectName ? (
+                    {catchParams.projectName ? (
                         <>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton
+                                    onClick={() => navigate(`/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
                                     <Avatar
                                         sx={{background: 'lightBlue', borderRadius: '5px', mr: 3, ml: -1}}
                                     >
-                                        {projectName[0]}
+                                        {catchParams.projectName[0]}
                                     </Avatar>
-                                    {projectName}
+                                    {catchParams.projectName}
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton
+                                    onClick={() => navigate(`/projectInformation/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
                                     <ListItemIcon>
                                         <AccountTreeIcon/>
                                     </ListItemIcon>
@@ -57,7 +60,8 @@ const ListGroup: React.FC<Props> = ({projectName}) => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton
+                                    onClick={() => navigate(`/issues/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
                                     <ListItemIcon>
                                         <DraftsIcon/>
                                     </ListItemIcon>

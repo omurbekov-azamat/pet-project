@@ -5,20 +5,21 @@ import {selectBreadcrumb} from '../../../features/projects/projectsSlice';
 import {useAppSelector} from '../../../app/hooks';
 import Divider from '@mui/material/Divider';
 import {Link} from '../../../helpers';
+import {Params} from '../../../types';
 
 interface Props {
-    managerName: string;
-    projectName: string;
+    catchParams: Params;
 }
 
-const BasicBreadcrumbs: React.FC<Props> = ({managerName, projectName}) => {
+const BasicBreadcrumbs: React.FC<Props> = ({catchParams}) => {
     const breadcrumb = useAppSelector(selectBreadcrumb);
     return (
         <>
             <Breadcrumbs aria-label="breadcrumb" sx={{mt: 2}}>
-                <Link to={managerName ? '#' : '/'}>{managerName ? managerName : 'Your work'}</Link>
+                <Link
+                    to={catchParams.managerName ? '#' : '/'}>{catchParams.managerName ? catchParams.managerName : 'Your work'}</Link>
                 <Typography color="text.primary" textTransform='capitalize'>
-                    {projectName ? projectName : breadcrumb}
+                    {catchParams.projectName ? catchParams.projectName : breadcrumb}
                 </Typography>
             </Breadcrumbs>
             <Divider sx={{mt: 0.5}}/>

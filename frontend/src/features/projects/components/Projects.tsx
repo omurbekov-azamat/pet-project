@@ -1,68 +1,54 @@
 import React, {useEffect} from 'react';
-import {selectFetchProjectLoading, selectFetchProjectsLoading, selectProject, selectProjects} from '../projectsSlice';
+import {useNavigate} from 'react-router-dom';
+import {moveBreadcrumbs, selectFetchProjectsLoading, selectProjects} from '../projectsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {getProject, getProjects} from '../projectsThunks';
-import {Avatar, Box, Grid, LinearProgress, Typography} from '@mui/material';
-import ProjectItems from './ProjectItems';
-import ProjectReadMe from './ProjectReadMe';
+import {selectUser} from '../../users/usersSlice';
+import {Badge, Button, Grid, Typography} from '@mui/material';
+import ProjectItem from './ProjectItem';
+import Divider from '@mui/material/Divider';
+import {getProjects} from '../projectsThunks';
 
-export interface Props {
-    dashboard: string;
-    managerName: string;
-    projectName: string;
-    projectId: string;
-}
-
-const Projects: React.FC<Props> = ({dashboard, projectName, managerName, projectId}) => {
+const Projects = () => {
     const dispatch = useAppDispatch();
-    const projectsLoading = useAppSelector(selectFetchProjectsLoading);
-    const projectLoading = useAppSelector(selectFetchProjectLoading);
+    const navigate = useNavigate();
     const projects = useAppSelector(selectProjects);
-    const project = useAppSelector(selectProject);
+    const user = useAppSelector(selectUser);
+    const projectsLoading = useAppSelector(selectFetchProjectsLoading);
 
     useEffect(() => {
-        if (!projectId) {
-            dispatch(getProjects());
-        }
-    }, [dispatch, dashboard, projectId]);
+        dispatch(getProjects());
+    }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(getProject(projectId));
-    }, [dispatch, projectId]);
-
-    let showProject = projects.length > 0 && <ProjectItems/>
-
-    if (projectName && managerName) {
-        showProject = <Box>
-            <Grid container alignItems='center' mb={1}>
-                <Grid item>
-                    <Avatar
-                        sx={{background: 'lightBlue', borderRadius: '5px', mr: 2}}
-                    >
-                        {project?.name[0]}
-                    </Avatar>
-                </Grid>
-                <Grid item>
-                    <Grid container flexDirection='column'>
-                        <Grid item>
-                            <Typography fontWeight='bolder'>{project?.name}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant='subtitle2'>Project ID: {project?._id}</Typography>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <LinearProgress color="error"/>
-            {project && <ProjectReadMe project={project}/>}
-        </Box>
-    }
+    const onClickHandler = () => {
+        dispatch(moveBreadcrumbs('New project'));
+        navigate('/dashboard/new-project');
+    };
 
     return (
         <>
+            <Grid container alignItems='center' justifyContent='space-between'>
+                <Grid item>
+                    <Typography component='div' variant='h5' fontWeight='bolder'>Projects</Typography>
+                </Grid>
+                <Grid item>
+                    {user && user.role === 'manager' &&
+                        <Button variant='contained' onClick={onClickHandler}>new project</Button>}
+                </Grid>
+            </Grid>
+            <Typography>
+                <Badge badgeContent={projects.length} color="error" sx={{mt: 3}}>
+                    Yours
+                </Badge>
+            </Typography>
+            <Divider sx={{mt: 0.5}}/>
             {projectsLoading && <Typography>loading...</Typography>}
-            {projectLoading && <Typography>loading...</Typography>}
-            {showProject}
+            {projects.length > 0 &&
+                <Grid container flexDirection='column' mt={2}>
+                    {projects.map(project => (
+                        <ProjectItem key={project._id} item={project}/>
+                    ))}
+                </Grid>
+            }000
         </>
     );
 };

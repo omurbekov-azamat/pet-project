@@ -57,3 +57,11 @@ export interface Project {
     name: string;
     _id: string;
 }
+
+export interface Params {
+    listName: string;
+    managerName: string;
+    projectName: string;
+    id: string;
+    dashboard: string;
+}

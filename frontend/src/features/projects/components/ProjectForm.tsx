@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {createProject} from '../projectsThunks';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {Box, Grid, TextField, Typography} from '@mui/material';
-import {ProjectMutation} from '../../../types';
 import {selectCreateProjectError, selectCreateProjectLoading} from '../projectsSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {createProject} from '../projectsThunks';
+import {Box, Grid, TextField, Typography} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
+import {ProjectMutation} from '../../../types';
 
 const ProjectForm = () => {
     const dispatch = useAppDispatch();
@@ -17,7 +17,6 @@ const ProjectForm = () => {
         name: '',
         description: '',
     });
-    console.log(loading)
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;

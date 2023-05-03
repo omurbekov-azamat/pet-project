@@ -57,7 +57,7 @@ projectsRouter.get('/:id', auth, async (req, res, next) => {
             const projects = await Project.find({
                 _id: req.params.id,
                 developers: {$in: [user._id]}
-            }).populate('manager', ['displayName']);
+            }).populate('manager', ['displayName']).populate('developers', '-token');
 
             if (projects.length <= 0) {
                 return res.send({message: "You don't have projects!"});
@@ -67,7 +67,7 @@ projectsRouter.get('/:id', auth, async (req, res, next) => {
             const projects = await Project.find({
                 manager: user._id,
                 _id: req.params.id
-            }).populate('manager', ['displayName']);
+            }).populate('manager', ['displayName']).populate('developers', '-token');
 
             if (projects.length <= 0) {
                 return res.send({message: "You don't have projects!"});

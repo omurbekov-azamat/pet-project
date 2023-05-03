@@ -17,7 +17,7 @@ const run = async () => {
         console.log('Collections were not present')
     }
 
-    const [userOne, userTwo] = await User.create({
+    const [userOne, userTwo, userThree] = await User.create({
         email: 'user1@gmail.com',
         password: '123',
         displayName: 'Максим',
@@ -27,6 +27,11 @@ const run = async () => {
         email: 'user2@gmail.com',
         password: '123',
         displayName: 'Никита',
+        token: crypto.randomUUID(),
+    }, {
+        email: 'user3@gmail.com',
+        password: '123',
+        displayName: 'Данила',
         token: crypto.randomUUID(),
     });
 
@@ -38,7 +43,7 @@ const run = async () => {
         name: 'Shop',
         description: 'Create shop website',
         manager: userOne._id,
-        developers: [userTwo._id]
+        developers: [userTwo._id, userThree]
     });
 
     await db.close();

@@ -52,7 +52,7 @@ export interface ProjectMutation {
 
 export interface Project {
     description: string;
-    developers: string[];
+    developers: User[];
     manager: Manager;
     name: string;
     _id: string;

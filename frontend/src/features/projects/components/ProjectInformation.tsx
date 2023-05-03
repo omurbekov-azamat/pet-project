@@ -9,7 +9,6 @@ interface Props {
     catchParams: Params;
 }
 
-
 const ProjectInformation: React.FC<Props> = ({catchParams}) => {
     const dispatch = useAppDispatch();
     const projectLoading = useAppSelector(selectFetchProjectLoading);

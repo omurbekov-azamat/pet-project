@@ -4,6 +4,7 @@ import ProjectForm from '../features/projects/components/ProjectForm';
 import Projects from '../features/projects/components/Projects';
 import Project from '../features/projects/components/Project';
 import {Params} from '../types';
+import ProjectInformation from '../features/projects/components/ProjectInformation';
 
 interface Props {
     catchParams: Params;
@@ -21,7 +22,7 @@ const Development: React.FC<Props> = ({catchParams}) => {
     }
 
     if (catchParams.dashboard === 'projectInformation') {
-        showDevelopment = <Typography>Project Information</Typography>
+        showDevelopment = <ProjectInformation catchParams={catchParams}/>
     }
 
     if (catchParams.dashboard === 'issues') {

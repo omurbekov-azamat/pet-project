@@ -34,7 +34,7 @@ const Project: React.FC<Props> = ({catchParams}) => {
                     <Grid item>
                         <Grid container flexDirection='column'>
                             <Grid item>
-                                <Typography fontWeight='bolder'>{project?.name}</Typography>
+                                <Typography fontWeight='bolder' textTransform='capitalize'>{project?.name}</Typography>
                             </Grid>
                             <Grid item>
                                 <Typography variant='subtitle2'>Project ID: {project?._id}</Typography>

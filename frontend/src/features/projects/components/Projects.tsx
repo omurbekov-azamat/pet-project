@@ -48,7 +48,7 @@ const Projects = () => {
                         <ProjectItem key={project._id} item={project}/>
                     ))}
                 </Grid>
-            }000
+            }
         </>
     );
 };

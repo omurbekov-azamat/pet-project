@@ -40,7 +40,7 @@ const ListGroup: React.FC<Props> = ({catchParams}) => {
                     {catchParams.projectName ? (
                         <>
                             <ListItem disablePadding>
-                                <ListItemButton
+                                <ListItemButton sx={{textTransform: 'capitalize'}}
                                     onClick={() => navigate(`/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
                                     <Avatar
                                         sx={{background: 'lightBlue', borderRadius: '5px', mr: 3, ml: -1}}

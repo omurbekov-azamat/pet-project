@@ -6,6 +6,7 @@ import Project from '../features/projects/components/Project';
 import {Params} from '../types';
 import ProjectInformation from '../features/projects/components/ProjectInformation';
 import ProjectIssues from '../features/projects/components/ProjectIssues';
+import ProjectAddDeveloper from '../features/projects/components/ProjectAddDeveloper';
 
 interface Props {
     catchParams: Params;
@@ -32,6 +33,10 @@ const Development: React.FC<Props> = ({catchParams}) => {
 
     if (catchParams.dashboard === 'new_issue') {
         showDevelopment = <Typography>Here will be issue form</Typography>
+    }
+
+    if (catchParams.dashboard === 'add_developer') {
+        showDevelopment = <ProjectAddDeveloper/>
     }
 
     if (catchParams.listName === 'new-project') {

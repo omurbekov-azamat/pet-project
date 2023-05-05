@@ -49,3 +49,15 @@ export const logout = createAsyncThunk(
         await axiosApi.delete('/users/sessions');
     }
 );
+
+export const getDevelopers = createAsyncThunk<User[]>(
+    'users/getDevelopers',
+    async () => {
+        try {
+            const responseDevelopers = await axiosApi.get<User[]>('/users/get/developers');
+            return responseDevelopers.data;
+        } catch (e) {
+            throw e;
+        }
+    }
+);

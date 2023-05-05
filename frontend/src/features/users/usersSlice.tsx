@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {login, logout, register} from './usersThunks';
+import {getDevelopers, login, logout, register} from './usersThunks';
 import {GlobalError, User, ValidationError} from '../../types';
 
 
@@ -11,6 +11,7 @@ interface UsersState {
     loginLoading: boolean;
     loginError: GlobalError | null;
     logoutLoading: boolean;
+    developers: User[];
 }
 
 const initialState: UsersState = {
@@ -20,6 +21,7 @@ const initialState: UsersState = {
     loginLoading: false,
     loginError: null,
     logoutLoading: false,
+    developers: [],
 }
 
 export const usersSlice = createSlice({
@@ -61,6 +63,9 @@ export const usersSlice = createSlice({
         builder.addCase(logout.rejected, (state) => {
             state.logoutLoading = false;
         });
+        builder.addCase(getDevelopers.fulfilled, (state, {payload: developers}) => {
+            state.developers = developers;
+        });
     },
 });
 
@@ -72,3 +77,4 @@ export const selectRegisterError = (state: RootState) => state.users.registerErr
 export const selectLoginLoading = (state: RootState) => state.users.loginLoading;
 export const selectLoginError = (state: RootState) => state.users.loginError;
 export const selectLogoutLoading = (state: RootState) => state.users.logoutLoading;
+export const selectDevelopers = (state: RootState) => state.users.developers;

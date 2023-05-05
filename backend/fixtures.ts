@@ -18,20 +18,35 @@ const run = async () => {
     }
 
     const [userOne, userTwo, userThree] = await User.create({
-        email: 'user1@gmail.com',
+        email: 'manager@gmail.com',
         password: '123',
-        displayName: 'Максим',
+        displayName: 'Эмиль',
         token: crypto.randomUUID(),
         role: 'manager'
     }, {
+        email: 'user1@gmail.com',
+        password: '123',
+        displayName: 'Азамат Омурбеков',
+        token: crypto.randomUUID(),
+    }, {
         email: 'user2@gmail.com',
         password: '123',
-        displayName: 'Никита',
+        displayName: 'Куон Валерий',
         token: crypto.randomUUID(),
     }, {
         email: 'user3@gmail.com',
         password: '123',
-        displayName: 'Данила',
+        displayName: 'Биктимиров Эдиль',
+        token: crypto.randomUUID(),
+    },  {
+        email: 'user4@gmail.com',
+        password: '123',
+        displayName: 'Маркелов Артем',
+        token: crypto.randomUUID(),
+    },  {
+        email: 'user5@gmail.com',
+        password: '123',
+        displayName: 'Акматалиев Нурдамир',
         token: crypto.randomUUID(),
     });
 

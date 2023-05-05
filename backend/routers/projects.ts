@@ -1,5 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import mongoose, {ObjectId} from 'mongoose';
 import auth, {RequestWithUser} from '../middleware/auth';
 import Project from '../models/Project';
 import Task from '../models/Task';
@@ -82,6 +82,7 @@ projectsRouter.get('/:id', auth, async (req, res, next) => {
 projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
     const projectId = req.params.id;
+    const developersId = req.body.useDevelopers;
     try {
         const foundProject = await Project.findOne({
             manager: user._id,
@@ -92,13 +93,14 @@ projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) =>
             return res.send({error: 'Projects are not found!'});
         }
 
-        if (foundProject.developers.includes(req.body.developerId)) {
-            return res.send({message: 'This developer is already in the project!'});
-        } else {
-            foundProject.developers.push(req.body.developerId);
-            foundProject.save();
-            return res.send({message: 'You have added a new developer!'});
+        const newDevelopers = developersId.filter((id: ObjectId) => !foundProject.developers.includes(id));
+        if (newDevelopers.length === 0) {
+            return res.send({message: 'These developers are already in the project!'});
         }
+
+        foundProject.developers.push(...newDevelopers.map((id: ObjectId) => id));
+        await foundProject.save();
+        return res.send({message: 'You have added new developers!', newDevelopers});
     } catch (e) {
         return next(e);
     }

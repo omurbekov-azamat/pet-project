@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {createProject, getProject, getProjects} from './projectsThunks';
+import {addDevelopers, createProject, getProject, getProjects} from './projectsThunks';
 import {Project, ValidationError} from '../../types';
 
 interface ProjectsState {
@@ -11,6 +11,7 @@ interface ProjectsState {
     project: Project | null;
     createProjectLoading: boolean;
     createProjectError: ValidationError | null;
+    addDevelopersLoading: boolean;
 }
 
 const initialState: ProjectsState = {
@@ -21,6 +22,7 @@ const initialState: ProjectsState = {
     project: null,
     createProjectLoading: false,
     createProjectError: null,
+    addDevelopersLoading: false,
 }
 
 export const projectsSlice = createSlice({
@@ -65,6 +67,15 @@ export const projectsSlice = createSlice({
             state.createProjectLoading = false;
             state.createProjectError = error || null;
         });
+        builder.addCase(addDevelopers.pending, (state) => {
+            state.addDevelopersLoading = true;
+        });
+        builder.addCase(addDevelopers.fulfilled, (state) => {
+            state.addDevelopersLoading = false;
+        });
+        builder.addCase(addDevelopers.rejected, (state) => {
+            state.addDevelopersLoading = false;
+        });
     },
 });
 
@@ -78,3 +89,4 @@ export const selectFetchProjectLoading = (state: RootState) => state.projects.ge
 export const selectProject = (state: RootState) => state.projects.project;
 export const selectCreateProjectLoading = (state: RootState) => state.projects.createProjectLoading;
 export const selectCreateProjectError = (state: RootState) => state.projects.createProjectError;
+export const selectAddDevelopersLoading = (state: RootState) => state.projects.addDevelopersLoading;

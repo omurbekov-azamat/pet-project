@@ -36,7 +36,7 @@ const Development: React.FC<Props> = ({catchParams}) => {
     }
 
     if (catchParams.dashboard === 'add_developer') {
-        showDevelopment = <ProjectAddDeveloper/>
+        showDevelopment = <ProjectAddDeveloper catchParams={catchParams}/>
     }
 
     if (catchParams.listName === 'new-project') {

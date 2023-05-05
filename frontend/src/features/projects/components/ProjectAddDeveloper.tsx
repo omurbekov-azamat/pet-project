@@ -1,13 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Checkbox, FormControlLabel, FormGroup, Menu} from '@mui/material';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {selectAddDevelopersLoading} from '../projectsSlice';
 import {selectDevelopers} from '../../users/usersSlice';
 import {getDevelopers} from '../../users/usersThunks';
+import {addDevelopers} from '../projectsThunks';
 import {enqueueSnackbar, SnackbarProvider} from 'notistack';
+import {Button, Checkbox, FormControlLabel, FormGroup, Menu} from '@mui/material';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {LoadingButton} from '@mui/lab';
+import {Params} from '../../../types';
 
-const ProjectAddDeveloper = () => {
+interface Props {
+    catchParams: Params;
+}
+
+const ProjectAddDeveloper: React.FC<Props> = ({catchParams}) => {
     const dispatch = useAppDispatch();
     const developers = useAppSelector(selectDevelopers);
+    const loading = useAppSelector(selectAddDevelopersLoading);
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [chooseDevelopers, setChooseDevelopers] = useState<string[]>([]);
@@ -32,13 +41,14 @@ const ProjectAddDeveloper = () => {
         }
     };
 
-    const handleOnClick = () => {
+    const handleOnClick = async () => {
         if (chooseDevelopers.length > 0) {
-            console.log(chooseDevelopers);
+            await dispatch(addDevelopers({id: catchParams.id, useDevelopers: chooseDevelopers}))
+            await enqueueSnackbar('You have successfully added developers to the project', {variant: 'success'});
         } else {
-            enqueueSnackbar('You have to choose developer', {variant: 'warning'});
+            await enqueueSnackbar('You have to choose developer', {variant: 'warning'});
         }
-    }
+    };
 
     useEffect(() => {
         dispatch(getDevelopers());
@@ -70,7 +80,7 @@ const ProjectAddDeveloper = () => {
                     ))}
                 </FormGroup>
             </Menu>
-            <Button onClick={handleOnClick}>Add developers</Button>
+            <LoadingButton loading={loading} onClick={handleOnClick} variant='contained'>Add developers</LoadingButton>
         </>
     );
 };

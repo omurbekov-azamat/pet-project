@@ -4,6 +4,8 @@ import {Error} from "mongoose";
 import {imagesUpload} from '../multer';
 import crypto from "crypto";
 import User from '../models/User';
+import auth from '../middleware/auth';
+import permit from '../middleware/permit';
 
 const usersRouter = express.Router();
 
@@ -47,6 +49,20 @@ usersRouter.post('/sessions', async (req, res, next) => {
         return res.send({message: 'Username and password correct', user});
     } catch (error) {
         return next(error);
+    }
+});
+
+usersRouter.get('/get/developers', auth, permit('manager'), async (req, res, next) => {
+    try {
+        const developers = await User.find({role: 'developer'}).select('-token');
+
+        if (developers.length === 0) {
+            return res.send({message: 'There are no developers'});
+        }
+
+        return res.send(developers);
+    } catch (e) {
+        return next(e);
     }
 });
 

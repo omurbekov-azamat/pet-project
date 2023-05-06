@@ -79,10 +79,11 @@ projectsRouter.get('/:id', auth, async (req, res, next) => {
     }
 });
 
-projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) => {
+projectsRouter.patch('/:id/toggleDevelopers', auth, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
     const projectId = req.params.id;
     const developersId = req.body.useDevelopers;
+    const developerId = req.body.deleteDeveloper;
     try {
         const foundProject = await Project.findOne({
             manager: user._id,
@@ -93,14 +94,21 @@ projectsRouter.patch('/:id/toggleAddDevelopers', auth, async (req, res, next) =>
             return res.send({error: 'Projects are not found!'});
         }
 
-        const newDevelopers = developersId.filter((id: ObjectId) => !foundProject.developers.includes(id));
-        if (newDevelopers.length === 0) {
-            return res.send({message: 'These developers are already in the project!'});
-        }
+        if (developersId) {
+            const newDevelopers = developersId.filter((id: ObjectId) => !foundProject.developers.includes(id));
+            if (newDevelopers.length === 0) {
+                return res.send({message: 'These developers are already in the project!'});
+            }
 
-        foundProject.developers.push(...newDevelopers.map((id: ObjectId) => id));
-        await foundProject.save();
-        return res.send({message: 'You have added new developers!', newDevelopers});
+            foundProject.developers.push(...newDevelopers.map((id: ObjectId) => id));
+            await foundProject.save();
+            return res.send({message: 'You have added new developers!', newDevelopers});
+        } else {
+            const developers = foundProject.developers.filter((id: ObjectId) => id.toString() !== developerId);
+            foundProject.developers.splice(0, foundProject.developers.length, ...developers);
+            await foundProject.save();
+            return res.send({message: 'You have removed the developer!', developers});
+        }
     } catch (e) {
         return next(e);
     }

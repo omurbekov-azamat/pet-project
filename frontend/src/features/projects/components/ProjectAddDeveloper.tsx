@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {selectAddDevelopersLoading} from '../projectsSlice';
 import {selectDevelopers} from '../../users/usersSlice';
 import {getDevelopers} from '../../users/usersThunks';
-import {addDevelopers} from '../projectsThunks';
+import {toggleDevelopers} from '../projectsThunks';
 import {enqueueSnackbar, SnackbarProvider} from 'notistack';
 import {Button, Checkbox, FormControlLabel, FormGroup, Menu} from '@mui/material';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
@@ -43,7 +43,7 @@ const ProjectAddDeveloper: React.FC<Props> = ({catchParams}) => {
 
     const handleOnClick = async () => {
         if (chooseDevelopers.length > 0) {
-            await dispatch(addDevelopers({id: catchParams.id, useDevelopers: chooseDevelopers}))
+            await dispatch(toggleDevelopers({id: catchParams.id, useDevelopers: chooseDevelopers}))
             await enqueueSnackbar('You have successfully added developers to the project', {variant: 'success'});
         } else {
             await enqueueSnackbar('You have to choose developer', {variant: 'warning'});

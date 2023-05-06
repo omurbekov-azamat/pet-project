@@ -45,14 +45,19 @@ export const getProject = createAsyncThunk<Project, string>(
 
 export interface SendDevelopers {
     id: string;
-    useDevelopers: string[];
+    useDevelopers?: string[];
+    deleteDeveloper?: string;
 }
 
-export const addDevelopers = createAsyncThunk<void,SendDevelopers>(
+export const toggleDevelopers = createAsyncThunk<void,SendDevelopers>(
     'projects/addDevelopers',
     async (data) => {
         try {
-            await axiosApi.patch('/projects/' + data.id + '/toggleAddDevelopers', {useDevelopers: data.useDevelopers});
+            if (data.useDevelopers) {
+                await axiosApi.patch('/projects/' + data.id + '/toggleDevelopers', {useDevelopers: data.useDevelopers});
+            } else {
+                await axiosApi.patch('/projects/' + data.id + '/toggleDevelopers', {deleteDeveloper: data.deleteDeveloper});
+            }
         } catch (e) {
             throw e;
         }

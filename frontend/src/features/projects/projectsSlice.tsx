@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {addDevelopers, createProject, getProject, getProjects} from './projectsThunks';
+import {createProject, getProject, getProjects, toggleDevelopers} from './projectsThunks';
 import {Project, ValidationError} from '../../types';
 
 interface ProjectsState {
@@ -67,13 +67,13 @@ export const projectsSlice = createSlice({
             state.createProjectLoading = false;
             state.createProjectError = error || null;
         });
-        builder.addCase(addDevelopers.pending, (state) => {
+        builder.addCase(toggleDevelopers.pending, (state) => {
             state.addDevelopersLoading = true;
         });
-        builder.addCase(addDevelopers.fulfilled, (state) => {
+        builder.addCase(toggleDevelopers.fulfilled, (state) => {
             state.addDevelopersLoading = false;
         });
-        builder.addCase(addDevelopers.rejected, (state) => {
+        builder.addCase(toggleDevelopers.rejected, (state) => {
             state.addDevelopersLoading = false;
         });
     },

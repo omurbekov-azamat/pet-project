@@ -3,6 +3,7 @@ import {selectAddDevelopersLoading} from '../projectsSlice';
 import {selectDevelopers} from '../../users/usersSlice';
 import {getDevelopers} from '../../users/usersThunks';
 import {toggleDevelopers} from '../projectsThunks';
+import {useNavigate} from 'react-router-dom';
 import {enqueueSnackbar, SnackbarProvider} from 'notistack';
 import {Button, Checkbox, FormControlLabel, FormGroup, Menu} from '@mui/material';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
@@ -15,6 +16,7 @@ interface Props {
 
 const ProjectAddDeveloper: React.FC<Props> = ({catchParams}) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const developers = useAppSelector(selectDevelopers);
     const loading = useAppSelector(selectAddDevelopersLoading);
 
@@ -45,14 +47,15 @@ const ProjectAddDeveloper: React.FC<Props> = ({catchParams}) => {
         if (chooseDevelopers.length > 0) {
             await dispatch(toggleDevelopers({id: catchParams.id, useDevelopers: chooseDevelopers}))
             await enqueueSnackbar('You have successfully added developers to the project', {variant: 'success'});
+            await navigate(`/projectInformation/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)
         } else {
             await enqueueSnackbar('You have to choose developer', {variant: 'warning'});
         }
     };
 
     useEffect(() => {
-        dispatch(getDevelopers());
-    }, [dispatch]);
+        dispatch(getDevelopers(catchParams.id));
+    }, [dispatch, catchParams.id]);
 
     return (
         <>

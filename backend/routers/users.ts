@@ -6,6 +6,7 @@ import crypto from "crypto";
 import User from '../models/User';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
+import Project from '../models/Project';
 
 const usersRouter = express.Router();
 
@@ -52,15 +53,25 @@ usersRouter.post('/sessions', async (req, res, next) => {
     }
 });
 
-usersRouter.get('/get/developers', auth, permit('manager'), async (req, res, next) => {
+usersRouter.get('/:id/developers', auth, permit('manager'), async (req, res, next) => {
     try {
+        const projectId = req.params.id;
+        const foundProject = await Project.findById(projectId);
+        if (!foundProject) {
+            return res.send({message: 'Project is not found'});
+        }
+
         const developers = await User.find({role: 'developer'}).select('-token');
 
         if (developers.length === 0) {
             return res.send({message: 'There are no developers'});
         }
 
-        return res.send(developers);
+        const notInProject = await User.find({
+            role: 'developer',
+            _id: {$nin: foundProject.developers}
+        }).select('-token');
+        return res.send(notInProject);
     } catch (e) {
         return next(e);
     }

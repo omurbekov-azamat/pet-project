@@ -50,11 +50,11 @@ export const logout = createAsyncThunk(
     }
 );
 
-export const getDevelopers = createAsyncThunk<User[]>(
+export const getDevelopers = createAsyncThunk<User[], string>(
     'users/getDevelopers',
-    async () => {
+    async (id) => {
         try {
-            const responseDevelopers = await axiosApi.get<User[]>('/users/get/developers');
+            const responseDevelopers = await axiosApi.get<User[]>(`/users/${id}/developers`);
             return responseDevelopers.data;
         } catch (e) {
             throw e;

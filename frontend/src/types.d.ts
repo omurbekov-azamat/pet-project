@@ -77,6 +77,7 @@ export interface MilestoneMutation extends MilestoneData {
 }
 
 export interface MilestoneSend extends MilestoneData {
+    project: string;
     startDate: string;
     dueDate: string;
 }

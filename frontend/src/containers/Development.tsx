@@ -32,7 +32,7 @@ const Development: React.FC<Props> = ({catchParams}) => {
     }
 
     if (catchParams.dashboard === 'milestones') {
-        showDevelopment = <ProjectMilestones/>
+        showDevelopment = <ProjectMilestones catchParams={catchParams}/>
     }
 
     if (catchParams.dashboard === 'new_issue') {

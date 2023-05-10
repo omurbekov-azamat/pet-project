@@ -6,7 +6,9 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LoadingButton, TabContext, TabList} from '@mui/lab';
 import TabPanel from '@mui/lab/TabPanel';
 import Alert from '@mui/material/Alert';
-import {MilestoneMutation, MilestoneSend} from '../../../types';
+import {MilestoneMutation, MilestoneSend, Params} from '../../../types';
+import {useAppDispatch} from '../../../app/hooks';
+import {createMilestone} from '../../milestones/milestonesThunks';
 
 const initialState: MilestoneMutation = {
     title: '',
@@ -17,9 +19,11 @@ const initialState: MilestoneMutation = {
 
 interface Props {
     exist?: MilestoneMutation;
+    catchParams: Params;
 }
 
-const ProjectMilestones: React.FC<Props> = ({exist = initialState}) => {
+const ProjectMilestones: React.FC<Props> = ({exist = initialState, catchParams}) => {
+    const dispatch = useAppDispatch();
     const [state, setState] = React.useState(exist);
     const [value, setValue] = React.useState(`1`);
     const [required, setRequired] = React.useState<boolean>(false);
@@ -47,10 +51,11 @@ const ProjectMilestones: React.FC<Props> = ({exist = initialState}) => {
             setRequired(false);
             const data: MilestoneSend = {
                 ...state,
+                project: catchParams.id,
                 startDate: state.startDate.toDateString(),
                 dueDate: state.dueDate.toDateString(),
             };
-            console.log(data);
+            dispatch(createMilestone(data));
         } else {
             setRequired(true);
         }

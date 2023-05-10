@@ -1,9 +1,10 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import storage from 'redux-persist/lib/storage';
-import { persistReducer, persistStore } from 'redux-persist';
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
+import {persistReducer, persistStore} from 'redux-persist';
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist/es/constants';
 import {usersReducer} from "../features/users/usersSlice";
 import {projectsReducer} from '../features/projects/projectsSlice';
+import {milestonesReducer} from '../features/milestones/milestonesSlice';
 
 const usersPersistConfig = {
     key: 'chat:users',
@@ -14,6 +15,7 @@ const usersPersistConfig = {
 const rootReducer = combineReducers({
     users: persistReducer(usersPersistConfig, usersReducer),
     projects: projectsReducer,
+    milestones: milestonesReducer,
 });
 
 export const store = configureStore({

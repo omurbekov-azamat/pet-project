@@ -24,3 +24,11 @@ export interface ITask {
     developer: ObjectId;
     status: 'new' | 'in progress' | 'done';
 }
+
+export interface IMilestone {
+    project: ObjectId;
+    title: string;
+    startDate: string;
+    dueDate: string;
+    description: string;
+}

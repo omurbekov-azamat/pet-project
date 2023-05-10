@@ -16,3 +16,14 @@ export const createMilestone = createAsyncThunk<void, MilestoneSend, { rejectVal
         }
     }
 );
+
+export const getProjectMilestones = createAsyncThunk<void, string>(
+    'milestone/getProjectMilestones',
+    async (id) => {
+        try {
+            await axiosApi.get('/milestones/' + id);
+        } catch (e) {
+            throw e;
+        }
+    }
+);

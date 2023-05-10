@@ -6,7 +6,7 @@ import Project from '../features/projects/components/Project';
 import {Params} from '../types';
 import ProjectInformation from '../features/projects/components/ProjectInformation';
 import ProjectIssues from '../features/projects/components/ProjectIssues';
-import ProjectMilestones from '../features/projects/components/ProjectMilestones';
+import MilestonePage from '../features/milestones/components/MilestonePage';
 
 interface Props {
     catchParams: Params;
@@ -32,7 +32,7 @@ const Development: React.FC<Props> = ({catchParams}) => {
     }
 
     if (catchParams.dashboard === 'milestones') {
-        showDevelopment = <ProjectMilestones catchParams={catchParams}/>
+        showDevelopment = <MilestonePage catchParams={catchParams}/>
     }
 
     if (catchParams.dashboard === 'new_issue') {

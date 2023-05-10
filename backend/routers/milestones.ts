@@ -25,4 +25,16 @@ milestonesRouter.post('/', auth, permit('manager'), async (req, res, next) => {
    }
 });
 
+milestonesRouter.get('/:id', auth, async (req, res, next) => {
+    try {
+        const milestones = await Milestone.find({project: req.params.id});
+        if (!milestones){
+            return res.status(404).send({error: 'Milestones are not found!'});
+        }
+        return res.send(milestones);
+    } catch (e) {
+        return next(e);
+    }
+});
+
 export default milestonesRouter;

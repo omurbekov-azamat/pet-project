@@ -1,6 +1,6 @@
-import React from 'react';
-import {selectCreateMilestoneError, selectCreateMilestoneLoading} from '../../milestones/milestonesSlice';
-import {createMilestone} from '../../milestones/milestonesThunks';
+import React, {useEffect} from 'react';
+import {selectCreateMilestoneError, selectCreateMilestoneLoading} from '../milestonesSlice';
+import {createMilestone, getProjectMilestones} from '../milestonesThunks';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
@@ -23,7 +23,7 @@ interface Props {
     catchParams: Params;
 }
 
-const ProjectMilestones: React.FC<Props> = ({exist = initialState, catchParams}) => {
+const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => {
     const dispatch = useAppDispatch();
     const createLoading = useAppSelector(selectCreateMilestoneLoading);
     const createError = useAppSelector(selectCreateMilestoneError);
@@ -73,6 +73,12 @@ const ProjectMilestones: React.FC<Props> = ({exist = initialState, catchParams})
             setRequired(true);
         }
     };
+
+    useEffect(() => {
+        if (value === '1') {
+            dispatch(getProjectMilestones(catchParams.id))
+        }
+    }, [dispatch, value, catchParams.id]);
 
     return (
         <Box sx={{width: '100%'}}>
@@ -150,4 +156,4 @@ const ProjectMilestones: React.FC<Props> = ({exist = initialState, catchParams})
     );
 };
 
-export default ProjectMilestones;
+export default MilestonePage;

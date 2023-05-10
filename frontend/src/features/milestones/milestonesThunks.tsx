@@ -7,8 +7,7 @@ export const createMilestone = createAsyncThunk<void, MilestoneSend, { rejectVal
     'milestone/createMilestone',
     async (data, {rejectWithValue}) => {
         try {
-            const response = await axiosApi.post('/milestones', data);
-            console.log(response.data);
+            await axiosApi.post('/milestones', data);
         } catch (e) {
             if (isAxiosError(e) && e.response && e.response.status === 400) {
                 return rejectWithValue(e.response.data as ValidationError);

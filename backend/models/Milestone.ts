@@ -24,6 +24,7 @@ const MilestoneSchema = new Schema<IMilestone>({
         type: String,
         required: true,
     },
+    description: String,
 });
 
 const Milestone = mongoose.model<IMilestone>('Milestone', MilestoneSchema);

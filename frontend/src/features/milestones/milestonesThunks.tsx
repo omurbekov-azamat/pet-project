@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {isAxiosError} from 'axios';
-import {MilestoneSend, ValidationError} from '../../types';
 import axiosApi from '../../axiosApi';
+import {Milestone, MilestoneSend, ValidationError} from '../../types';
 
 export const createMilestone = createAsyncThunk<void, MilestoneSend, { rejectValue: ValidationError }>(
     'milestone/createMilestone',
@@ -17,11 +17,12 @@ export const createMilestone = createAsyncThunk<void, MilestoneSend, { rejectVal
     }
 );
 
-export const getProjectMilestones = createAsyncThunk<void, string>(
+export const getProjectMilestones = createAsyncThunk<Milestone[], string>(
     'milestone/getProjectMilestones',
     async (id) => {
         try {
-            await axiosApi.get('/milestones/' + id);
+            const responseMilestones = await axiosApi.get<Milestone[]>('/milestones/' + id);
+            return responseMilestones.data;
         } catch (e) {
             throw e;
         }

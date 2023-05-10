@@ -68,7 +68,7 @@ export interface Params {
 
 export interface MilestoneData {
     title: string;
-    description: string;
+    description?: string;
 }
 
 export interface MilestoneMutation extends MilestoneData {
@@ -80,4 +80,8 @@ export interface MilestoneSend extends MilestoneData {
     project: string;
     startDate: string;
     dueDate: string;
+}
+
+export interface Milestone extends MilestoneSend {
+    _id: string;
 }

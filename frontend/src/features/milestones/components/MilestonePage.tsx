@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {selectCreateMilestoneError, selectCreateMilestoneLoading} from '../milestonesSlice';
+import {selectCreateMilestoneError, selectCreateMilestoneLoading,} from '../milestonesSlice';
 import {createMilestone, getProjectMilestones} from '../milestonesThunks';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,6 +10,7 @@ import {Box, Grid, Tab, TextField} from '@mui/material';
 import TabPanel from '@mui/lab/TabPanel';
 import Alert from '@mui/material/Alert';
 import {MilestoneMutation, MilestoneSend, Params} from '../../../types';
+import MilestoneItems from './MilestoneItems';
 
 const initialState: MilestoneMutation = {
     title: '',
@@ -90,7 +91,7 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                         <Tab label="Item Three" value="3"/>
                     </TabList>
                 </Box>
-                <TabPanel value='1'>here will be milestones</TabPanel>
+                <TabPanel value='1'><MilestoneItems projectId={catchParams.id}/></TabPanel>
                 <TabPanel value='2'>
                     <Box component='form' onSubmit={submitFormHandler}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>

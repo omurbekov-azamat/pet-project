@@ -94,7 +94,7 @@ const ProjectInformation: React.FC<Props> = ({catchParams}) => {
                         </Button>
                         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)}
                               onClose={handleCloseChooseDevelopers}>
-                            <FormGroup sx={{p: 1, width: 189}}>
+                            <FormGroup sx={{p: 1, width: 250}}>
                                 {developers && developers.length > 0 ? developers.map((developer) => (
                                     <FormControlLabel
                                         key={developer._id}

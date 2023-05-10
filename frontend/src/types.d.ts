@@ -65,3 +65,18 @@ export interface Params {
     id: string;
     dashboard: string;
 }
+
+export interface MilestoneData {
+    title: string;
+    description: string;
+}
+
+export interface MilestoneMutation extends MilestoneData {
+    startDate: Date | null;
+    dueDate: Date | null;
+}
+
+export interface MilestoneSend extends MilestoneData {
+    startDate: string;
+    dueDate: string;
+}

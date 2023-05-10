@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import {Avatar} from '@mui/material';
 import {Params} from '../../../types';
 
@@ -41,7 +42,7 @@ const ListGroup: React.FC<Props> = ({catchParams}) => {
                         <>
                             <ListItem disablePadding>
                                 <ListItemButton sx={{textTransform: 'capitalize'}}
-                                    onClick={() => navigate(`/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
+                                                onClick={() => navigate(`/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
                                     <Avatar
                                         sx={{background: 'lightBlue', borderRadius: '5px', mr: 3, ml: -1}}
                                     >
@@ -66,6 +67,15 @@ const ListGroup: React.FC<Props> = ({catchParams}) => {
                                         <DraftsIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="Issues"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton
+                                    onClick={() => navigate(`/milestones/${catchParams.managerName}/${catchParams.projectName}/${catchParams.id}`)}>
+                                    <ListItemIcon>
+                                        <HourglassTopIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary='Milestones'/>
                                 </ListItemButton>
                             </ListItem>
                         </>

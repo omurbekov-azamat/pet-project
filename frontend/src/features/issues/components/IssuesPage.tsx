@@ -13,6 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import {selectUser} from '../../users/usersSlice';
 import MenuItem from '@mui/material/MenuItem';
 import {createTask} from '../issuesThunks';
+import {selectCreateIssueError, selectCreateIssueLoading} from '../issuesSlice';
 import {Params, TaskMutation} from '../../../types';
 
 const initialState: TaskMutation = {
@@ -33,6 +34,8 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     const user = useAppSelector(selectUser);
     const project = useAppSelector(selectProject);
     const milestones = useAppSelector(selectMilestones);
+    const createLoading = useAppSelector(selectCreateIssueLoading);
+    const createError = useAppSelector(selectCreateIssueError);
 
     const [option, setOption] = React.useState(`1`);
     const [state, setState] = React.useState<TaskMutation>(exist);
@@ -54,6 +57,14 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     const submitFormHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         await dispatch(createTask({...state, project: catchParams.id}));
+    };
+
+    const getFieldError = (fieldName: string) => {
+        try {
+            return createError?.errors[fieldName].message;
+        } catch {
+            return undefined;
+        }
     };
 
     useEffect(() => {
@@ -88,6 +99,9 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                     onChange={inputChangeHandler}
                                     label='Title (required)'
                                     fullWidth={true}
+                                    error={Boolean(getFieldError('title'))}
+                                    helperText={getFieldError('title')}
+                                    required
                                 />
                             </Grid>
                             <Grid item>
@@ -99,6 +113,9 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                     multiline
                                     label='Description'
                                     fullWidth={true}
+                                    error={Boolean(getFieldError('description'))}
+                                    helperText={getFieldError('description')}
+                                    required
                                 />
                             </Grid>
                             <Grid item>
@@ -112,6 +129,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                         name='assignee'
                                         onChange={handleInputChange}
                                         sx={{minWidth: 200}}
+                                        error={Boolean(getFieldError('assignee'))}
                                     >
                                         <MenuItem disabled>Select assignee</MenuItem>
                                         {project?.developers.map(item => (
@@ -131,6 +149,8 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                         name='milestone'
                                         onChange={handleInputChange}
                                         sx={{minWidth: 200}}
+                                        error={Boolean(getFieldError('milestone'))}
+                                        required
                                     >
                                         <MenuItem disabled>Assign milestone</MenuItem>
                                         {milestones.map(item => (
@@ -140,7 +160,13 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                 </FormControl>
                             </Grid>
                             <Grid item>
-                                <LoadingButton variant='contained' type='submit'>Create issue</LoadingButton>
+                                <LoadingButton
+                                    loading={createLoading}
+                                    variant='contained'
+                                    type='submit'
+                                >
+                                    Create issue
+                                </LoadingButton>
                             </Grid>
                         </Grid>
                     </Box>

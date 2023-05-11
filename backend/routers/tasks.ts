@@ -10,7 +10,7 @@ tasksRouter.post('/', auth, async (req, res, next) => {
     try {
         const task: ITask = await Task.create({
             project: req.body.project,
-            assignee: req.body.assignee,
+            assignee: req.body.assignee ? req.body.assignee : null,
             milestone: req.body.milestone,
             title: req.body.title,
             description: req.body.description,

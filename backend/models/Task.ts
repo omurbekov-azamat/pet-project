@@ -1,8 +1,8 @@
-import {model, Schema, Types} from 'mongoose';
+import {HydratedDocument, model, Schema, Types} from 'mongoose';
 import User from './User';
 import Project from './Project';
 import Milestone from './Milestone';
-import {ITask} from '../types';
+import {ITask, IUser} from '../types';
 
 const TaskSchema = new Schema<ITask>({
     project: {
@@ -18,12 +18,19 @@ const TaskSchema = new Schema<ITask>({
         type: Schema.Types.ObjectId,
         ref: 'User',
         validate: {
-            validator: async (value: Types.ObjectId) => User.findById(value),
+            validator: async (value: Types.ObjectId) => {
+                if (value === null) {
+                    return true;
+                }
+                const user: HydratedDocument<IUser> | null = await User.findById(value);
+                return user && user.role === 'developer';
+            },
             message: 'User does not exist',
         }
     },
     milestone: {
         type: Schema.Types.ObjectId,
+        required: true,
         ref: 'Milestone',
         validate: {
             validator: async (value: Types.ObjectId) => Milestone.findById(value),

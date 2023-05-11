@@ -19,7 +19,7 @@ export interface IProject {
 
 export interface ITask {
     project: ObjectId;
-    assignee: ObjectId;
+    assignee: ObjectId | undefined;
     milestone: ObjectId;
     status: 'new' | 'in progress' | 'done';
     title: string;

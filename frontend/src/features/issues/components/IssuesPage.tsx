@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import {selectUser} from '../../users/usersSlice';
 import MenuItem from '@mui/material/MenuItem';
+import {createTask} from '../issuesThunks';
 import {Params, TaskMutation} from '../../../types';
 
 const initialState: TaskMutation = {
@@ -52,10 +53,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
 
     const submitFormHandler = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log({
-            ...state,
-            project: catchParams.id,
-        });
+        await dispatch(createTask({...state, project: catchParams.id}));
     };
 
     useEffect(() => {

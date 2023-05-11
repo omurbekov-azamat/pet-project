@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectLoginError, selectLoginLoading} from './usersSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {selectLoginError, selectLoginLoading} from '../usersSlice';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
-import {login} from './usersThunks';
+import {login} from '../usersThunks';
 import {LoadingButton} from '@mui/lab';
 import Alert from '@mui/material/Alert'
-import {LoginMutation} from '../../types';
+import {LoginMutation} from '../../../types';
 
 const Login = () => {
     const dispatch = useAppDispatch();

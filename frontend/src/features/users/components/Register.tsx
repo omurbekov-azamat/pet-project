@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
-import {selectRegisterError, selectRegisterLoading} from './usersSlice';
+import {selectRegisterError, selectRegisterLoading} from '../usersSlice';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import FileInput from '../../components/UI/FileInput/FileInput';
-import {register} from './usersThunks';
+import FileInput from '../../../components/UI/FileInput/FileInput';
+import {register} from '../usersThunks';
 import {LoadingButton} from "@mui/lab";
-import {RegisterMutation} from '../../types';
+import {RegisterMutation} from '../../../types';
 
 const Register = () => {
     const dispatch = useAppDispatch();

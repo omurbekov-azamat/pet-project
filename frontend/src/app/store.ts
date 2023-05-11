@@ -5,6 +5,7 @@ import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist/e
 import {usersReducer} from "../features/users/usersSlice";
 import {projectsReducer} from '../features/projects/projectsSlice';
 import {milestonesReducer} from '../features/milestones/milestonesSlice';
+import {issuesReducer} from '../features/issues/issuesSlice';
 
 const usersPersistConfig = {
     key: 'chat:users',
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     users: persistReducer(usersPersistConfig, usersReducer),
     projects: projectsReducer,
     milestones: milestonesReducer,
+    issues: issuesReducer,
 });
 
 export const store = configureStore({

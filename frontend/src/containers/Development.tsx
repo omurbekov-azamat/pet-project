@@ -3,10 +3,10 @@ import {Typography} from '@mui/material';
 import ProjectForm from '../features/projects/components/ProjectForm';
 import Projects from '../features/projects/components/Projects';
 import Project from '../features/projects/components/Project';
-import {Params} from '../types';
 import ProjectInformation from '../features/projects/components/ProjectInformation';
-import ProjectIssues from '../features/projects/components/ProjectIssues';
+import IssuesPage from '../features/issues/components/IssuesPage';
 import MilestonePage from '../features/milestones/components/MilestonePage';
+import {Params} from '../types';
 
 interface Props {
     catchParams: Params;
@@ -28,15 +28,11 @@ const Development: React.FC<Props> = ({catchParams}) => {
     }
 
     if (catchParams.dashboard === 'issues') {
-        showDevelopment = <ProjectIssues catchParams={catchParams}/>
+        showDevelopment = <IssuesPage catchParams={catchParams}/>
     }
 
     if (catchParams.dashboard === 'milestones') {
         showDevelopment = <MilestonePage catchParams={catchParams}/>
-    }
-
-    if (catchParams.dashboard === 'new_issue') {
-        showDevelopment = <Typography>Here will be issue form</Typography>
     }
 
     if (catchParams.listName === 'new-project') {

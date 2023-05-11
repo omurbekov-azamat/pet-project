@@ -3,6 +3,8 @@ import {selectCreateMilestoneError, selectCreateMilestoneLoading,} from '../mile
 import {createMilestone, getProjectMilestones} from '../milestonesThunks';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {selectUser} from '../../users/usersSlice';
+import MilestoneItems from './MilestoneItems';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LoadingButton, TabContext, TabList} from '@mui/lab';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
@@ -10,7 +12,6 @@ import {Box, Grid, Tab, TextField} from '@mui/material';
 import TabPanel from '@mui/lab/TabPanel';
 import Alert from '@mui/material/Alert';
 import {MilestoneMutation, MilestoneSend, Params} from '../../../types';
-import MilestoneItems from './MilestoneItems';
 
 const initialState: MilestoneMutation = {
     title: '',
@@ -26,6 +27,7 @@ interface Props {
 
 const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
     const createLoading = useAppSelector(selectCreateMilestoneLoading);
     const createError = useAppSelector(selectCreateMilestoneError);
 
@@ -87,7 +89,7 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                 <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Milestones" value="1"/>
-                        <Tab label="New milestone" value="2"/>
+                        <Tab label="New milestone" value="2" disabled={user ? 'manager' !== user.role && true : false}/>
                         <Tab label="Item Three" value="3"/>
                     </TabList>
                 </Box>

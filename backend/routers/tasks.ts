@@ -3,10 +3,11 @@ import express from 'express';
 import auth from '../middleware/auth';
 import Task from '../models/Task';
 import {ITask} from '../types';
+import permit from '../middleware/permit';
 
 const tasksRouter = express.Router();
 
-tasksRouter.post('/', auth, async (req, res, next) => {
+tasksRouter.post('/', auth, permit('manager'), async (req, res, next) => {
     try {
         const task: ITask = await Task.create({
             project: req.body.project,

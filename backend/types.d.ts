@@ -18,11 +18,13 @@ export interface IProject {
 }
 
 export interface ITask {
-    name: String;
-    description: string;
     project: ObjectId;
-    developer: ObjectId;
+    assignee: ObjectId;
+    milestone: ObjectId;
     status: 'new' | 'in progress' | 'done';
+    title: string;
+    description: string;
+    creationDate: string;
 }
 
 export interface IMilestone {

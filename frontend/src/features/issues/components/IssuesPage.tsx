@@ -1,27 +1,75 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import TabPanel from '@mui/lab/TabPanel';
-import {LoadingButton, TabContext, TabList} from '@mui/lab';
+import {getProjectMilestones} from '../../milestones/milestonesThunks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {selectMilestones} from '../../milestones/milestonesSlice';
 import {Box, Grid, Tab, TextField, Typography} from '@mui/material';
-import {useAppSelector} from '../../../app/hooks';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
+import {selectProject} from '../../projects/projectsSlice';
+import {getProject} from '../../projects/projectsThunks';
+import {LoadingButton, TabContext, TabList} from '@mui/lab';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import {selectUser} from '../../users/usersSlice';
-import {Params} from '../../../types';
+import MenuItem from '@mui/material/MenuItem';
+import {Params, TaskMutation} from '../../../types';
+
+const initialState: TaskMutation = {
+    assignee: '',
+    description: '',
+    milestone: '',
+    project: '',
+    title: '',
+};
 
 interface Props {
     catchParams: Params;
+    exist?: TaskMutation;
 }
 
-const IssuesPage: React.FC<Props> = ({catchParams}) => {
+const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
-    const [value, setValue] = React.useState(`1`);
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue);
+    const project = useAppSelector(selectProject);
+    const milestones = useAppSelector(selectMilestones);
+
+    const [option, setOption] = React.useState(`1`);
+    const [state, setState] = React.useState<TaskMutation>(exist);
+
+    const optionHandleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setOption(newValue);
     };
+
+    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = event.target;
+        setState(prev => ({...prev, [name]: value}));
+    };
+
+    const handleInputChange = (event: SelectChangeEvent) => {
+        const {name, value} = event.target;
+        setState(prev => ({...prev, [name]: value}));
+    };
+
+    const submitFormHandler = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log({
+            ...state,
+            project: catchParams.id,
+        });
+    };
+
+    useEffect(() => {
+        if (option === '4') {
+            dispatch(getProjectMilestones(catchParams.id))
+            dispatch(getProject(catchParams.id));
+        }
+    }, [dispatch, catchParams.id, option]);
 
     return (
         <Box sx={{width: '100%'}}>
-            <TabContext value={value}>
+            <TabContext value={option}>
                 <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <TabList onChange={optionHandleChange} aria-label="lab API tabs example">
                         <Tab label="Open" value="1"/>
                         <Tab label="In Progress" value="2"/>
                         <Tab label="Closed" value="3"/>
@@ -32,23 +80,69 @@ const IssuesPage: React.FC<Props> = ({catchParams}) => {
                 <TabPanel value='2'>in progress</TabPanel>
                 <TabPanel value='3'>closed</TabPanel>
                 <TabPanel value='4'>
-                    <Box component='form'>
+                    <Box component='form' onSubmit={submitFormHandler}>
                         <Typography fontWeight='bolder'>New Issue</Typography>
                         <Grid container flexDirection='column' spacing={3} mt={1}>
                             <Grid item xs={12}>
-                                <TextField label='Title (required)' fullWidth={true}/>
+                                <TextField
+                                    name='title'
+                                    value={state.title}
+                                    onChange={inputChangeHandler}
+                                    label='Title (required)'
+                                    fullWidth={true}
+                                />
                             </Grid>
                             <Grid item>
-                                <TextField rows={4} multiline label='Description' fullWidth={true}/>
+                                <TextField
+                                    name='description'
+                                    value={state.description}
+                                    onChange={inputChangeHandler}
+                                    rows={4}
+                                    multiline
+                                    label='Description'
+                                    fullWidth={true}
+                                />
                             </Grid>
                             <Grid item>
-                                <TextField label='Assignee'/>
+                                <FormControl>
+                                    <InputLabel id="demo-simple-select-label">Assignee</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={state.assignee}
+                                        label='Assignee'
+                                        name='assignee'
+                                        onChange={handleInputChange}
+                                        sx={{minWidth: 200}}
+                                    >
+                                        <MenuItem disabled>Select assignee</MenuItem>
+                                        {project?.developers.map(item => (
+                                            <MenuItem key={item._id} value={item._id}>{item.displayName}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item>
-                                <TextField label='Milestone'/>
+                                <FormControl>
+                                    <InputLabel id="demo-simple-select-label">Milestone</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={state.milestone}
+                                        label='Milestone'
+                                        name='milestone'
+                                        onChange={handleInputChange}
+                                        sx={{minWidth: 200}}
+                                    >
+                                        <MenuItem disabled>Assign milestone</MenuItem>
+                                        {milestones.map(item => (
+                                            <MenuItem key={item._id} value={item._id}>{item.title}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item>
-                                <LoadingButton variant='contained'>Create issue</LoadingButton>
+                                <LoadingButton variant='contained' type='submit'>Create issue</LoadingButton>
                             </Grid>
                         </Grid>
                     </Box>

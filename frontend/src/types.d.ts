@@ -85,3 +85,11 @@ export interface MilestoneSend extends MilestoneData {
 export interface Milestone extends MilestoneSend {
     _id: string;
 }
+
+export interface TaskMutation {
+    project: string;
+    assignee: string;
+    milestone: string;
+    title: string;
+    description: string;
+}

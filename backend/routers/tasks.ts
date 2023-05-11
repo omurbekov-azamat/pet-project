@@ -2,16 +2,18 @@ import mongoose from 'mongoose';
 import express from 'express';
 import auth from '../middleware/auth';
 import Task from '../models/Task';
+import {ITask} from '../types';
 
 const tasksRouter = express.Router();
 
 tasksRouter.post('/', auth, async (req, res, next) => {
     try {
-        const task = await Task.create({
-            name: req.body.name,
-            description: req.body.description,
+        const task: ITask = await Task.create({
             project: req.body.project,
-            developer: req.body.developer,
+            assignee: req.body.assignee,
+            milestone: req.body.milestone,
+            title: req.body.title,
+            description: req.body.description,
         });
         return res.send({message: 'Created successfully', task});
     } catch (e) {

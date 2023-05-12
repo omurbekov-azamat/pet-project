@@ -26,4 +26,15 @@ tasksRouter.post('/', auth, permit('manager'), async (req, res, next) => {
     }
 });
 
+tasksRouter.get('/:id', auth, async (req, res, next) => {
+    const project = req.params.id;
+    const status = req.body.status;
+    try {
+        const tasks = Task.find({project, status});
+        return res.send(tasks);
+    } catch (e) {
+        return next(e);
+    }
+});
+
 export default tasksRouter;

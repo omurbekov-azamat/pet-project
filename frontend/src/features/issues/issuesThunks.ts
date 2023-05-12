@@ -19,7 +19,7 @@ export const createTask = createAsyncThunk<void, TaskMutation, { rejectValue: Va
 
 interface GetTasksProps {
     id: string;
-    status: string;
+    status?: string;
 }
 
 export const getProjectTasks = createAsyncThunk<Task[], GetTasksProps>(

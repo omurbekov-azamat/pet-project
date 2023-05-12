@@ -102,4 +102,5 @@ export interface Task {
     project: string;
     status: string;
     title: string;
+    _id: string;
 }

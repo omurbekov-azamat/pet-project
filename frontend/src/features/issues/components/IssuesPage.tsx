@@ -13,8 +13,9 @@ import InputLabel from '@mui/material/InputLabel';
 import {selectUser} from '../../users/usersSlice';
 import MenuItem from '@mui/material/MenuItem';
 import {createTask, getProjectTasks} from '../issuesThunks';
-import {selectCreateIssueError, selectCreateIssueLoading} from '../issuesSlice';
+import {selectCreateIssueError, selectCreateIssueLoading, selectIssuesByStatus} from '../issuesSlice';
 import {Params, TaskMutation} from '../../../types';
+import IssueItems from './IssueItems';
 
 const initialState: TaskMutation = {
     assignee: '',
@@ -36,6 +37,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     const milestones = useAppSelector(selectMilestones);
     const createLoading = useAppSelector(selectCreateIssueLoading);
     const createError = useAppSelector(selectCreateIssueError);
+    const issuesByStatus = useAppSelector(selectIssuesByStatus);
 
     const [option, setOption] = React.useState(`1`);
     const [state, setState] = React.useState<TaskMutation>(exist);
@@ -70,8 +72,13 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     useEffect(() => {
         if (option === '1') {
             dispatch(getProjectTasks({id: catchParams.id, status: 'new'}));
-        }
-        if (option === '4') {
+        } else if (option === '2') {
+            dispatch(getProjectTasks({id: catchParams.id, status: 'in progress'}));
+        } else if (option === '3') {
+            dispatch(getProjectTasks({id: catchParams.id, status: 'done'}));
+        } else if (option === '4') {
+            dispatch(getProjectTasks({id: catchParams.id}));
+        } else if (option === '5') {
             dispatch(getProjectMilestones(catchParams.id))
             dispatch(getProject(catchParams.id));
         }
@@ -85,13 +92,15 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                         <Tab label="Open" value="1"/>
                         <Tab label="In Progress" value="2"/>
                         <Tab label="Closed" value="3"/>
-                        <Tab label="New issue" value="4" disabled={user ? 'manager' !== user.role && true : false}/>
+                        <Tab label='All' value='4'/>
+                        <Tab label="New issue" value="5" disabled={user ? 'manager' !== user.role && true : false}/>
                     </TabList>
                 </Box>
-                <TabPanel value='1'>open</TabPanel>
-                <TabPanel value='2'>in progress</TabPanel>
-                <TabPanel value='3'>closed</TabPanel>
-                <TabPanel value='4'>
+                <TabPanel value='1'>{issuesByStatus && <IssueItems items={issuesByStatus}/>}</TabPanel>
+                <TabPanel value='2'>{issuesByStatus && <IssueItems items={issuesByStatus}/>}</TabPanel>
+                <TabPanel value='3'>{issuesByStatus && <IssueItems items={issuesByStatus}/>}</TabPanel>
+                <TabPanel value='4'>{issuesByStatus && <IssueItems items={issuesByStatus}/>}</TabPanel>
+                <TabPanel value='5'>
                     <Box component='form' onSubmit={submitFormHandler}>
                         <Typography fontWeight='bolder'>New Issue</Typography>
                         <Grid container flexDirection='column' spacing={3} mt={1}>

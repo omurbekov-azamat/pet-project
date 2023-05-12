@@ -36,9 +36,10 @@ tasksRouter.get('/', auth, async (req, res, next) => {
             findParams.project = project;
         }
 
-        if (status) {
+        if (status !== 'undefined') {
             findParams.status = status;
         }
+
         const tasks = await Task.find(findParams).populate('assignee', '-token').populate('milestone');
         return res.send(tasks);
     } catch (e) {

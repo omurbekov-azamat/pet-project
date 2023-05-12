@@ -20,13 +20,14 @@ export const createTask = createAsyncThunk<void, TaskMutation, { rejectValue: Va
 interface GetTasksProps {
     id: string;
     status?: string;
+    milestone?: string;
 }
 
 export const getProjectTasks = createAsyncThunk<Task[], GetTasksProps>(
     'issues/getProjectTasks',
     async (data) => {
         try {
-            const responseTasks = await axiosApi.get<Task[]>('/tasks?id=' + data.id + '&status=' + data.status);
+            const responseTasks = await axiosApi.get<Task[]>('/tasks?id=' + data.id + '&status=' + data.status + '&milestone=' + data.milestone);
             return responseTasks.data;
         } catch (e) {
             throw  e;

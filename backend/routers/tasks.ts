@@ -4,6 +4,7 @@ import auth from '../middleware/auth';
 import Task from '../models/Task';
 import {ITask, SearchParams} from '../types';
 import permit from '../middleware/permit';
+import milestone from '../models/Milestone';
 
 const tasksRouter = express.Router();
 
@@ -29,6 +30,7 @@ tasksRouter.post('/', auth, permit('manager'), async (req, res, next) => {
 tasksRouter.get('/', auth, async (req, res, next) => {
     const project = req.query.id as string;
     const status = req.query.status as string;
+    const milestone = req.query.milestone as string;
     try {
         const findParams: SearchParams = {};
 
@@ -38,6 +40,11 @@ tasksRouter.get('/', auth, async (req, res, next) => {
 
         if (status !== 'undefined') {
             findParams.status = status;
+        }
+
+        if (milestone !== 'undefined') {
+            findParams.milestone = milestone;
+            findParams.status = 'done';
         }
 
         const tasks = await Task.find(findParams).populate('assignee', '-token').populate('milestone');

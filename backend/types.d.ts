@@ -38,4 +38,5 @@ export interface IMilestone {
 export interface SearchParams {
     project?: string;
     status?: string;
+    milestone?: string;
 }

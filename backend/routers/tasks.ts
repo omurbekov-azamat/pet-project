@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, {HydratedDocument} from 'mongoose';
 import express from 'express';
 import auth from '../middleware/auth';
 import Task from '../models/Task';
@@ -49,6 +49,23 @@ tasksRouter.get('/', auth, async (req, res, next) => {
 
         const tasks = await Task.find(findParams).populate('assignee', '-token').populate('milestone');
         return res.send(tasks);
+    } catch (e) {
+        return next(e);
+    }
+});
+
+tasksRouter.patch('/:id', auth, async (req, res, next) => {
+    try {
+        const updatedFields = {...req.body};
+        const task: HydratedDocument<ITask> | null = await Task.findOneAndUpdate(
+            {_id: req.params.id},
+            {$set: updatedFields},
+            {new: true},
+        );
+        if (!task) {
+            return res.status(404).send({message: 'Not found task'});
+        }
+        res.send({message: 'Changed successfully'});
     } catch (e) {
         return next(e);
     }

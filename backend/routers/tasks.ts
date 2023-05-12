@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import auth from '../middleware/auth';
 import Task from '../models/Task';
-import {ITask} from '../types';
+import {ITask, SearchParams} from '../types';
 import permit from '../middleware/permit';
 
 const tasksRouter = express.Router();
@@ -26,11 +26,20 @@ tasksRouter.post('/', auth, permit('manager'), async (req, res, next) => {
     }
 });
 
-tasksRouter.get('/:id', auth, async (req, res, next) => {
-    const project = req.params.id;
-    const status = req.body.status;
+tasksRouter.get('/', auth, async (req, res, next) => {
+    const project = req.query.id as string;
+    const status = req.query.status as string;
     try {
-        const tasks = Task.find({project, status});
+        const findParams: SearchParams = {};
+
+        if (project) {
+            findParams.project = project;
+        }
+
+        if (status) {
+            findParams.status = status;
+        }
+        const tasks = await Task.find(findParams).populate('assignee', '-token').populate('milestone');
         return res.send(tasks);
     } catch (e) {
         return next(e);

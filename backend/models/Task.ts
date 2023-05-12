@@ -10,7 +10,10 @@ const TaskSchema = new Schema<ITask>({
         ref: 'Project',
         required: true,
         validate: {
-            validator: async (value: Types.ObjectId) => Project.findById(value),
+            async validator(value: Types.ObjectId) {
+                const project = await Project.findById(value);
+                return project !== null;
+            },
             message: 'Project does not exist',
         },
     },

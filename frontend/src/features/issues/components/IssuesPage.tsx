@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import {selectUser} from '../../users/usersSlice';
 import MenuItem from '@mui/material/MenuItem';
-import {createTask} from '../issuesThunks';
+import {createTask, getProjectTasks} from '../issuesThunks';
 import {selectCreateIssueError, selectCreateIssueLoading} from '../issuesSlice';
 import {Params, TaskMutation} from '../../../types';
 
@@ -68,6 +68,9 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     };
 
     useEffect(() => {
+        if (option === '1') {
+            dispatch(getProjectTasks({id: catchParams.id, status: 'new'}));
+        }
         if (option === '4') {
             dispatch(getProjectMilestones(catchParams.id))
             dispatch(getProject(catchParams.id));

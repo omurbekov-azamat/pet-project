@@ -34,3 +34,8 @@ export interface IMilestone {
     dueDate: string;
     description: string;
 }
+
+export interface SearchParams {
+    project?: string;
+    status?: string;
+}

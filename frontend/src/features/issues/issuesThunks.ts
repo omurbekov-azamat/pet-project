@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
 import {isAxiosError} from 'axios';
-import {TaskMutation, ValidationError} from '../../types';
+import {Task, TaskMutation, ValidationError} from '../../types';
 
 export const createTask = createAsyncThunk<void, TaskMutation, { rejectValue: ValidationError }>(
     'issues/createTask',
@@ -13,6 +13,23 @@ export const createTask = createAsyncThunk<void, TaskMutation, { rejectValue: Va
                 return rejectWithValue(e.response.data as ValidationError);
             }
             throw e;
+        }
+    }
+);
+
+interface GetTasksProps {
+    id: string;
+    status: string;
+}
+
+export const getProjectTasks = createAsyncThunk<Task[], GetTasksProps>(
+    'issues/getProjectTasks',
+    async (data) => {
+        try {
+            const responseTasks = await axiosApi.get<Task[]>('/tasks?id=' + data.id + '&status=' + data.status);
+            return responseTasks.data;
+        } catch (e) {
+            throw  e;
         }
     }
 );

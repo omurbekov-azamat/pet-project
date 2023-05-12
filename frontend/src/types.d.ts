@@ -93,3 +93,13 @@ export interface TaskMutation {
     title: string;
     description: string;
 }
+
+export interface Task {
+    assignee: User | null;
+    creationDate: string;
+    description: string;
+    milestone: Milestone;
+    project: string;
+    status: string;
+    title: string;
+}

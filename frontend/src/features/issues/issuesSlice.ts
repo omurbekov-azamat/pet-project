@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {createTask, getProjectTasks} from './issuesThunks';
+import {createTask, getProjectTasks, tryChangeTask} from './issuesThunks';
 import {Task, ValidationError} from '../../types';
 
 interface IssuesState {
@@ -8,6 +8,7 @@ interface IssuesState {
     createIssueError: ValidationError | null;
     fetchIssuesLoading: boolean;
     issuesByStatus: Task[];
+    changeIssueLoading: false | string;
 }
 
 const initialState: IssuesState = {
@@ -15,6 +16,7 @@ const initialState: IssuesState = {
     createIssueError: null,
     fetchIssuesLoading: false,
     issuesByStatus: [],
+    changeIssueLoading: false,
 };
 
 export const issuesSlice = createSlice({
@@ -43,8 +45,17 @@ export const issuesSlice = createSlice({
         });
         builder.addCase(getProjectTasks.rejected, (state) => {
             state.fetchIssuesLoading = false;
-        })
-    }
+        });
+        builder.addCase(tryChangeTask.pending, (state, {meta}) => {
+            state.changeIssueLoading = meta.arg.id;
+        });
+        builder.addCase(tryChangeTask.fulfilled, (state) => {
+            state.changeIssueLoading = false;
+        });
+        builder.addCase(tryChangeTask.rejected, (state) => {
+            state.changeIssueLoading = false;
+        });
+    },
 });
 
 export const issuesReducer = issuesSlice.reducer;
@@ -53,3 +64,4 @@ export const selectCreateIssueLoading = (state: RootState) => state.issues.creat
 export const selectCreateIssueError = (state: RootState) => state.issues.createIssueError;
 export const selectFetchIssuesLoading = (state: RootState) => state.issues.fetchIssuesLoading;
 export const selectIssuesByStatus = (state: RootState) => state.issues.issuesByStatus;
+export const selectChangeIssueLoading = (state: RootState) => state.issues.changeIssueLoading;

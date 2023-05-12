@@ -21,6 +21,7 @@ interface GetTasksProps {
     id: string;
     status?: string;
     milestone?: string;
+    assignee?: string;
 }
 
 export const getProjectTasks = createAsyncThunk<Task[], GetTasksProps>(
@@ -31,6 +32,21 @@ export const getProjectTasks = createAsyncThunk<Task[], GetTasksProps>(
             return responseTasks.data;
         } catch (e) {
             throw  e;
+        }
+    }
+);
+
+export const tryChangeTask = createAsyncThunk<void, GetTasksProps>(
+    'issues/onChangeTask',
+    async (data) => {
+        try {
+            if (data.status) {
+                await axiosApi.patch('/tasks/' + data.id, {status: data.status});
+            } else if (data.assignee) {
+                await axiosApi.patch('/tasks/' + data.id, {assignee: data.assignee});
+            }
+        } catch (e) {
+            throw e;
         }
     }
 );

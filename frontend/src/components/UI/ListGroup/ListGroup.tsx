@@ -104,7 +104,7 @@ const ListGroup: React.FC<Props> = ({catchParams}) => {
             sx={{
                 minWidth: 200,
                 height: '100%',
-                minHeight: '850px',
+                minHeight: 'auto',
                 background: '#fbfafd;',
             }}
             borderRadius={2}

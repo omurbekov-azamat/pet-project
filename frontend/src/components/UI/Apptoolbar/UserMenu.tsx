@@ -31,10 +31,6 @@ const UserMenu: React.FC<Props> = ({user}) => {
         await navigate('/');
     };
 
-    const handleMyGallery = async () => {
-        await navigate('/myProjects');
-    };
-
     return (
         <>
             <Grid container>
@@ -56,7 +52,6 @@ const UserMenu: React.FC<Props> = ({user}) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleMyGallery} disabled={loading}>My Projects</MenuItem>
                 <MenuItem onClick={handleLogout} disabled={loading}>Logout</MenuItem>
             </Menu>
         </>

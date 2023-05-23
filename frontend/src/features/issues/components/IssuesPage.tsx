@@ -59,6 +59,8 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
     const submitFormHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         await dispatch(createTask({...state, project: catchParams.id}));
+        await setState(exist);
+        await setOption('1');
     };
 
     const getFieldError = (fieldName: string) => {
@@ -93,7 +95,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                         <Tab label="In Progress" value="2"/>
                         <Tab label="Closed" value="3"/>
                         <Tab label='All' value='4'/>
-                        <Tab label="New issue" value="5" disabled={user ? 'manager' !== user.role && true : false}/>
+                        {user && user.role === 'manager' && <Tab label="New issue" value="5"/>}
                     </TabList>
                 </Box>
                 <TabPanel value='1'>{issuesByStatus && <IssueItems items={issuesByStatus}/>}</TabPanel>

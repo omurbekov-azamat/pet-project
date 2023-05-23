@@ -25,6 +25,12 @@ export interface ITask {
     title: string;
     description: string;
     creationDate: string;
+    ticketStartDate: string;
+    ticketCloseDate: string;
+    spendTime: {
+        hours: number;
+        minutes: number;
+    };
 }
 
 export interface IMilestone {

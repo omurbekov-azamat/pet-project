@@ -103,4 +103,10 @@ export interface Task {
     status: string;
     title: string;
     _id: string;
+    ticketStartDate: string;
+    ticketCloseDate: string;
+    spendTime: {
+        hours: number;
+        minutes: number;
+    };
 }

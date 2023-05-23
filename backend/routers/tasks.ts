@@ -47,8 +47,11 @@ tasksRouter.get('/', auth, async (req, res, next) => {
             findParams.status = 'done';
         }
 
-        const tasks = await Task.find(findParams).populate('assignee', '-token').populate('milestone');
-        return res.send(tasks);
+        const tasks = await Task.find(findParams)
+            .populate('assignee', '-token')
+            .populate('milestone');
+        const reversedTasks = tasks.reverse();
+        return res.send(reversedTasks);
     } catch (e) {
         return next(e);
     }
@@ -56,11 +59,33 @@ tasksRouter.get('/', auth, async (req, res, next) => {
 
 tasksRouter.patch('/:id', auth, async (req, res, next) => {
     try {
-        const updatedFields = {...req.body};
+        const {status, ...updatedFields} = req.body;
+        if (status === 'in progress') {
+            updatedFields.ticketStartDate = new Date().toISOString();
+            updatedFields.status = 'in progress';
+        } else if (status === 'done') {
+            updatedFields.status = 'done';
+            updatedFields.ticketCloseDate = new Date().toISOString();
+
+            const task = await Task.findById(req.params.id);
+            if (task) {
+                const startDate = new Date(task.ticketStartDate);
+                const closeDate = new Date(updatedFields.ticketCloseDate);
+                const timeDifference = (closeDate.getTime() - startDate.getTime());
+                const minutes = Math.floor(timeDifference / (1000 * 60));
+                const hours = Math.floor(minutes / 60);
+                const remainingMinutes = minutes % 60;
+                updatedFields.spendTime = {
+                    hours: hours,
+                    minutes: remainingMinutes
+                };
+            }
+        }
+
         const task: HydratedDocument<ITask> | null = await Task.findOneAndUpdate(
             {_id: req.params.id},
             {$set: updatedFields},
-            {new: true},
+            {new: true}
         );
         if (!task) {
             return res.status(404).send({message: 'Not found task'});

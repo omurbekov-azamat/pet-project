@@ -59,6 +59,12 @@ const TaskSchema = new Schema<ITask>({
         required: true,
         default: new Date().toISOString(),
     },
+    ticketStartDate: String,
+    ticketCloseDate: String,
+    spendTime: {
+        hours: Number,
+        minutes: Number,
+    },
 });
 
 const Task = model<ITask>('Task', TaskSchema);

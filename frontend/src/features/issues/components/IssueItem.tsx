@@ -32,7 +32,17 @@ const IssueItem: React.FC<Props> = ({item}) => {
     const onClickAssignYourself = async (issueId: string, projectId: string) => {
         await dispatch(tryChangeTask({id: issueId, assignee: user?._id}));
         await dispatch(getProjectTasks({id: projectId, status: 'new'}));
-    }
+    };
+
+    const onClickCloseTask = async (issueId: string, projectId: string) => {
+        await dispatch(tryChangeTask({id: issueId, status: 'done'}));
+        await dispatch(getProjectTasks({id: projectId, status: 'in progress'}));
+    };
+
+    const onClickStartTask = async (issueId: string, projectId: string) => {
+        await dispatch(tryChangeTask({id: issueId, status: 'in progress'}));
+        await dispatch(getProjectTasks({id: projectId, status: 'new'}));
+    };
 
     return (
         <Accordion>
@@ -70,15 +80,35 @@ const IssueItem: React.FC<Props> = ({item}) => {
             </AccordionSummary>
             <AccordionDetails sx={{background: 'WhiteSmoke'}}>
                 <Typography>Description: {item.description}</Typography>
-                {!item.assignee && user?.role === 'developer' &&
-                    <Box textAlign='right'>
+                {item.spendTime && <Typography>{item.spendTime.hours}. {item.spendTime.minutes}</Typography>}
+                <Box textAlign='right'>
+                    {!item.assignee && user?.role === 'developer' &&
+
                         <LoadingButton
                             loading={changeIssueLoading === item._id}
+
                             onClick={() => onClickAssignYourself(item._id, item.project)}
                         >
                             assign yourself
                         </LoadingButton>
-                    </Box>}
+                    }
+                    {item && item.status === 'in progress' && user?.role === 'developer' &&
+                        <LoadingButton
+                            loading={changeIssueLoading === item._id} color='error'
+                            onClick={() => onClickCloseTask(item._id, item.project)}
+                        >
+                            Close issue
+                        </LoadingButton>
+                    }
+                    {item.assignee && user?.role === 'developer' && item.status === 'open' &&
+                        <LoadingButton
+                            loading={changeIssueLoading === item._id} color='warning'
+                            onClick={() => onClickStartTask(item._id, item.project)}
+                        >
+                            Start issue
+                        </LoadingButton>
+                    }
+                </Box>
             </AccordionDetails>
         </Accordion>
     );

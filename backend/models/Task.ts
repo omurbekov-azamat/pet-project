@@ -57,7 +57,7 @@ const TaskSchema = new Schema<ITask>({
     creationDate: {
         type: String,
         required: true,
-        default: new Date().toISOString(),
+        default:  Date(),
     },
     ticketStartDate: String,
     ticketCloseDate: String,

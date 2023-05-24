@@ -89,7 +89,7 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                 <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Milestones" value="1"/>
-                        <Tab label="New milestone" value="2" disabled={user ? 'manager' !== user.role && true : false}/>
+                        {user && user.role === 'manager' && <Tab label="New milestone" value="2"/>}
                         <Tab label="Item Three" value="3"/>
                     </TabList>
                 </Box>

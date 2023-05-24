@@ -105,13 +105,18 @@ const run = async () => {
         status: 'in progress',
         title: 'Create header and footer for main page',
         description: 'Background should be light green color',
+        ticketStartDate: new Date().toISOString(),
     }, {
         project: booking._id,
         assignee: userTwo._id,
         milestone: sprintTwo._id,
         status: 'done',
         title: 'Create form for register new user',
-        description: 'Register form mush catch validation error from backend and the button should be primary color'
+        description: 'Register form mush catch validation error from backend and the button should be primary color',
+        spendTime: {
+            hours: 1,
+            minutes: 25,
+        },
     }, {
         project: shop._id,
         assignee: userTwo._id,
@@ -125,6 +130,7 @@ const run = async () => {
         status: 'in progress',
         title: 'Create card for shopItem',
         description: 'Card must have full information about shopItem and image',
+        ticketStartDate: new Date().toISOString(),
     }, {
         project: shop._id,
         assignee: userTwo._id,
@@ -132,6 +138,10 @@ const run = async () => {
         status: 'done',
         title: 'Creat Image carousel',
         description: 'Create image carousel must be accept array image from backend',
+        spendTime: {
+            hours: 0,
+            minutes: 25,
+        },
     });
 
     await db.close();

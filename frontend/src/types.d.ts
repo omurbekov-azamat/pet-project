@@ -28,6 +28,7 @@ export interface RegisterMutation {
     password: string;
     displayName: string;
     image: File | null;
+    role: string;
 }
 
 export interface RegisterResponse {

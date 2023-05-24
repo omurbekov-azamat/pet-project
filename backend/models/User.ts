@@ -43,8 +43,8 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     googleId: String,
     role: {
         type: String,
+        required: true,
         enum: ['developer', 'manager'],
-        default: 'developer',
     },
 });
 

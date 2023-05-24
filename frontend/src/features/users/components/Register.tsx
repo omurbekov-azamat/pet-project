@@ -1,28 +1,42 @@
 import React, {useState} from 'react';
-import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
+import {Avatar, Box, Container, FormControl, Grid, Link, TextField, Typography} from '@mui/material';
 import {selectRegisterError, selectRegisterLoading} from '../usersSlice';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FileInput from '../../../components/UI/FileInput/FileInput';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
 import {register} from '../usersThunks';
 import {LoadingButton} from "@mui/lab";
 import {RegisterMutation} from '../../../types';
 
-const Register = () => {
+const initialState: RegisterMutation = {
+    email: '',
+    password: '',
+    displayName: '',
+    image: null,
+    role: '',
+};
+
+interface Props {
+    exist?: RegisterMutation;
+}
+
+const Register: React.FC<Props> = ({exist = initialState}) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const error = useAppSelector(selectRegisterError);
     const loading = useAppSelector(selectRegisterLoading);
-    const navigate = useNavigate();
 
-    const [state, setState] = useState<RegisterMutation>({
-        email: '',
-        password: '',
-        displayName: '',
-        image: null,
-    });
+    const [state, setState] = useState<RegisterMutation>(exist);
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSelectChange = async (e: SelectChangeEvent) => {
+        setState(prev => ({...prev, role: e.target.value}))
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
         setState(prev => ({...prev, [name]: value}));
     };
@@ -34,18 +48,19 @@ const Register = () => {
         }));
     };
 
-    const submitFormHandler = async (event: React.FormEvent) => {
-        event.preventDefault();
-        await dispatch(register(state)).unwrap();
-        await navigate('/');
-    };
-
     const getFieldError = (fieldName: string) => {
         try {
             return error?.errors[fieldName].message;
         } catch {
             return undefined;
         }
+    };
+
+    const submitFormHandler = async (event: React.FormEvent) => {
+        event.preventDefault();
+        await dispatch(register(state)).unwrap();
+        await setState(exist);
+        await navigate('/');
     };
 
     return (
@@ -73,7 +88,7 @@ const Register = () => {
                                 name="email"
                                 autoComplete="new-email"
                                 value={state.email}
-                                onChange={inputChangeHandler}
+                                onChange={handleInputChange}
                                 error={Boolean(getFieldError('email'))}
                                 helperText={getFieldError('email')}
                                 required
@@ -86,7 +101,7 @@ const Register = () => {
                                 type="password"
                                 autoComplete="new-password"
                                 value={state.password}
-                                onChange={inputChangeHandler}
+                                onChange={handleInputChange}
                                 error={Boolean(getFieldError('password'))}
                                 helperText={getFieldError('password')}
                                 required
@@ -95,19 +110,37 @@ const Register = () => {
                         <Grid item xs={12}>
                             <TextField
                                 name="displayName"
-                                label="displayName"
+                                label="Display name"
                                 type="displayName"
                                 autoComplete="new-displayName"
                                 value={state.displayName}
-                                onChange={inputChangeHandler}
+                                onChange={handleInputChange}
                                 error={Boolean(getFieldError('displayName'))}
                                 helperText={getFieldError('displayName')}
                                 required
                             />
                         </Grid>
                         <Grid item xs={12}>
+                            <FormControl sx={{minWidth: '234.22px'}}>
+                                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={state.role}
+                                    label='Role'
+                                    name='role'
+                                    onChange={handleSelectChange}
+                                    required
+                                >
+                                    <MenuItem disabled>Select role</MenuItem>
+                                    <MenuItem value='manager'>Manager</MenuItem>
+                                    <MenuItem value='developer'>Developer</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
                             <FileInput
-                                label='avatar'
+                                label='Avatar'
                                 onChange={fileInputChangeHandler}
                                 name='image'
                                 type='images/*'

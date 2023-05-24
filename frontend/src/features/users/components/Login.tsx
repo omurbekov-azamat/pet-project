@@ -7,20 +7,26 @@ import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/ma
 import {login} from '../usersThunks';
 import {LoadingButton} from '@mui/lab';
 import Alert from '@mui/material/Alert'
-import {LoginMutation} from '../../../types';
+import {LoginMutation, RegisterMutation} from '../../../types';
 
-const Login = () => {
+const initialState: LoginMutation = {
+    email: '',
+    password: '',
+};
+
+interface Props {
+    exist?: RegisterMutation;
+}
+
+const Login: React.FC<Props> = ({exist= initialState}) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const error = useAppSelector(selectLoginError);
     const loading = useAppSelector(selectLoginLoading);
-    const navigate = useNavigate();
 
-    const [state, setState] = useState<LoginMutation>({
-        email: '',
-        password: '',
-    });
+    const [state, setState] = useState<LoginMutation>(exist);
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
         setState(prevState => ({...prevState, [name]: value}));
     };
@@ -28,6 +34,7 @@ const Login = () => {
     const submitFormHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         await dispatch(login(state)).unwrap();
+        await setState(exist);
         await navigate('/');
     };
 
@@ -61,7 +68,7 @@ const Login = () => {
                                 type='email'
                                 autoComplete="current-email"
                                 value={state.email}
-                                onChange={inputChangeHandler}
+                                onChange={handleInputChange}
                                 required
                             />
                         </Grid>
@@ -72,7 +79,7 @@ const Login = () => {
                                 type="password"
                                 autoComplete="current-password"
                                 value={state.password}
-                                onChange={inputChangeHandler}
+                                onChange={handleInputChange}
                                 required
                             />
                         </Grid>

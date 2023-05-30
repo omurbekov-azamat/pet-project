@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     Button, Container, createTheme,
     Dialog,
@@ -49,6 +49,32 @@ const ChatButton = () => {
         e.preventDefault();
         console.log(state);
     };
+
+    const ws = useRef<null | WebSocket>(null);
+
+    const connect = useCallback(() => {
+        ws.current = new WebSocket('ws://localhost:8000/chat');
+        console.log('11111');
+
+        ws.current.onclose = (event) => {
+            if (event.type === 'close') {
+                setTimeout(function () {
+                    connect();
+                    console.log('close');
+                }, 1000);
+            }
+        };
+
+        return () => {
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
+    }, [ws]);
+
+    useEffect(() => {
+        connect();
+    }, [connect]);
 
     return (
         <>

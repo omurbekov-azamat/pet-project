@@ -1,4 +1,5 @@
 import {ObjectId} from 'mongoose';
+import {WebSocket} from 'ws';
 
 export interface IUser {
     email: string;
@@ -45,4 +46,18 @@ export interface SearchParams {
     project?: string;
     status?: string;
     milestone?: string;
+}
+
+export interface ActiveConnections {
+    [id: string]: WebSocket;
+}
+
+export interface UserMessage {
+    _id: string;
+    message: string;
+}
+
+export interface IncomingMessage {
+    type: string;
+    payload: UserMessage;
 }

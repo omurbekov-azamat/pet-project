@@ -7,10 +7,11 @@ import usersRouter from './routers/users';
 import projectsRouter from './routers/projects';
 import tasksRouter from './routers/tasks';
 import milestonesRouter from './routers/milestones';
-import {ActiveConnections} from './types';
+import {ActiveConnections, IncomingMessage, UserMessage} from './types';
+import Message from './models/Message';
+import crypto from 'crypto';
 
 const app = express();
-expressWs(app);
 const port = 8000;
 const router = express.Router();
 app.use(cors());
@@ -20,7 +21,7 @@ app.use('/users', usersRouter);
 app.use('/projects', projectsRouter);
 app.use('/tasks', tasksRouter);
 app.use('/milestones', milestonesRouter);
-app.use(router);
+expressWs(app);
 
 const activeConnections: ActiveConnections = {};
 
@@ -28,7 +29,34 @@ router.ws('/chat', (ws) => {
     const id = crypto.randomUUID();
     activeConnections[id] = ws;
     console.log('Client connected! id =', id);
+    ws.on('message', async (messages) => {
+        const decodeMessage = JSON.parse(messages.toString()) as IncomingMessage;
+        switch (decodeMessage.type) {
+            case 'SEND_MESSAGE':
+                const responseMessage = decodeMessage.payload as UserMessage;
+                const message = new Message({
+                    user: responseMessage._id,
+                    message: responseMessage.message,
+                });
+                await message.save();
+                const result = await Message.findById(message._id).populate({path: 'user', select: 'firstName'});
+                Object.keys(activeConnections).forEach(id => {
+                    const conn = activeConnections[id];
+                    conn.send(JSON.stringify({
+                        type: 'SEND_MESSAGES',
+                        payload: [result]
+                    }));
+                });
+                break;
+        }
+    });
+    ws.on('close', () => {
+        console.log('Client disconnected! id =', id);
+        delete activeConnections[id];
+    });
 });
+
+app.use(router);
 
 const run = async () => {
     mongoose.set('strictQuery', false);

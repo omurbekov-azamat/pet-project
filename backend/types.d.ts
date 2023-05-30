@@ -61,3 +61,8 @@ export interface IncomingMessage {
     type: string;
     payload: UserMessage;
 }
+
+export interface IMessage {
+    user: ObjectId;
+    message: string;
+}

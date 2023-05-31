@@ -32,11 +32,16 @@ router.ws('/chat', async (ws) => {
     console.log('Client connected! id =', id);
     const users = await User.find({online: true}).select('displayName');
     if (users) {
+        const messagesData = await Message.find().populate({path: 'user', select: 'displayName'}).limit(30);
         Object.keys(activeConnections).forEach(id => {
             const conn = activeConnections[id];
             conn.send(JSON.stringify({
                 type: 'ONLINE_USERS',
                 payload: users,
+            }));
+            conn.send(JSON.stringify({
+                type: 'SEND_MESSAGES',
+                payload: messagesData,
             }));
         });
     }

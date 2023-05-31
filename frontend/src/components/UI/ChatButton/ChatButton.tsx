@@ -9,10 +9,10 @@ import {
     ThemeProvider,
     Typography
 } from '@mui/material';
-import {Message, Online} from '../../../types';
 import {websocketSend} from '../../../helpers';
 import {useAppSelector} from '../../../app/hooks';
 import {selectUser} from '../../../features/users/usersSlice';
+import {Message, Online} from '../../../types';
 
 const MyButton = styled(Button)({
     position: 'fixed',
@@ -92,7 +92,7 @@ const ChatButton: React.FC<Props> = ({onlineUsers, ws, messages}) => {
                                 <Grid container direction='column' justifyContent='space-around'>
                                     <Grid item height={380} overflow='auto'>
                                         {messages.map(item => (
-                                            <Typography key={item._id}>
+                                            <Typography key={Math.random()*9999}>
                                                 <b>{item.user.displayName}:</b> {item.message}
                                             </Typography>
                                         ))}

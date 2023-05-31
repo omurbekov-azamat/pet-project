@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
+import LoginWithGoogle from '../../../components/UI/LoginWithGoogle/LoginWithGoogle';
+import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {selectLoginError, selectLoginLoading} from '../usersSlice';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import {Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
 import {login} from '../usersThunks';
 import {LoadingButton} from '@mui/lab';
 import Alert from '@mui/material/Alert'
@@ -18,7 +19,7 @@ interface Props {
     exist?: RegisterMutation;
 }
 
-const Login: React.FC<Props> = ({exist= initialState}) => {
+const Login: React.FC<Props> = ({exist = initialState}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const error = useAppSelector(selectLoginError);
@@ -54,6 +55,7 @@ const Login: React.FC<Props> = ({exist= initialState}) => {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
+                <LoginWithGoogle/>
                 {error && (
                     <Alert severity="error" sx={{mt: 3, width: '100%'}}>
                         {error.error}

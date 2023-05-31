@@ -7,6 +7,7 @@ import {TabContext, TabList} from '@mui/lab';
 import TabPanel from '@mui/lab/TabPanel';
 import ProjectDevelopers from './ProjectDevelopers';
 import {Params} from '../../../types';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 interface Props {
     catchParams: Params;
@@ -37,7 +38,7 @@ const ProjectInformation: React.FC<Props> = ({catchParams}) => {
                     </TabList>
                 </Box>
                 <TabPanel value='1'>
-                    {projectLoading && <Typography>loading...</Typography>}
+                    {projectLoading && <Spinner/>}
                     <Typography mb={2}>{project?.description}</Typography>
                 </TabPanel>
                 <TabPanel value='2'><ProjectDevelopers/></TabPanel>

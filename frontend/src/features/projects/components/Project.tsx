@@ -5,6 +5,7 @@ import {getProject} from '../projectsThunks';
 import {Avatar, Box, Grid, LinearProgress, Typography} from '@mui/material';
 import ProjectReadMe from './ProjectReadMe';
 import {Params} from '../../../types';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 interface Props {
     catchParams: Params;
@@ -21,7 +22,7 @@ const Project: React.FC<Props> = ({catchParams}) => {
 
     return (
         <>
-            {projectLoading && <Typography>loading...</Typography>}
+            {projectLoading && <Spinner/>}
             {project && <Box>
                 <Grid container alignItems='center' mb={1}>
                     <Grid item>

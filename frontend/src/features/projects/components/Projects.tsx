@@ -7,6 +7,7 @@ import {Badge, Button, Grid, Typography} from '@mui/material';
 import ProjectItem from './ProjectItem';
 import Divider from '@mui/material/Divider';
 import {getProjects} from '../projectsThunks';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 const Projects = () => {
     const dispatch = useAppDispatch();
@@ -41,7 +42,7 @@ const Projects = () => {
                 </Badge>
             </Typography>
             <Divider sx={{mt: 0.5}}/>
-            {projectsLoading && <Typography>loading...</Typography>}
+            {projectsLoading && <Spinner/>}
             {projects.length > 0 &&
                 <Grid container flexDirection='column' mt={2}>
                     {projects.map(project => (

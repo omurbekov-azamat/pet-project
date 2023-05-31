@@ -10,7 +10,6 @@ export interface IUser {
     avatar: string | null;
     role: string;
     online: boolean;
-    googleID?: string;
 }
 
 export interface IProject {

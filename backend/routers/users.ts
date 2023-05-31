@@ -83,7 +83,7 @@ usersRouter.post("/google", async (req, res, next) => {
             user = new User({
                 email: email,
                 password: crypto.randomUUID(),
-                googleID: id,
+                googleId: id,
                 displayName,
                 role: 'developer',
                 avatar: image,

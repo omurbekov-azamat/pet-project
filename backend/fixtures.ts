@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import Project from './models/Project';
 import Milestone from './models/Milestone';
 import Task from './models/Task';
+import Message from './models/Message';
 
 const run = async () => {
     mongoose.set('strictQuery', false);
@@ -16,6 +17,7 @@ const run = async () => {
         await db.dropCollection('projects');
         await db.dropCollection('milestones');
         await db.dropCollection('tasks');
+        await db.dropCollection('messages');
     } catch (e) {
         console.log('Collections were not present')
     }
@@ -25,37 +27,43 @@ const run = async () => {
         password: '123',
         displayName: 'Эмиль',
         token: crypto.randomUUID(),
-        role: 'manager'
+        role: 'manager',
+        online: false,
     }, {
         email: 'user1@gmail.com',
         password: '123',
         displayName: 'Азамат Омурбеков',
         token: crypto.randomUUID(),
-        role: 'developer'
+        role: 'developer',
+        online: false,
     }, {
         email: 'user2@gmail.com',
         password: '123',
         displayName: 'Куон Валерий',
         token: crypto.randomUUID(),
-        role: 'developer'
+        role: 'developer',
+        online: false,
     }, {
         email: 'user3@gmail.com',
         password: '123',
         displayName: 'Биктимиров Эдиль',
         token: crypto.randomUUID(),
-        role: 'developer'
+        role: 'developer',
+        online: false,
     }, {
         email: 'user4@gmail.com',
         password: '123',
         displayName: 'Маркелов Артем',
         token: crypto.randomUUID(),
-        role: 'developer'
+        role: 'developer',
+        online: false,
     }, {
         email: 'user5@gmail.com',
         password: '123',
         displayName: 'Акматалиев Нурдамир',
         token: crypto.randomUUID(),
-        role: 'developer'
+        role: 'developer',
+        online: false,
     });
 
     const [booking, shop] = await Project.create({
@@ -95,6 +103,17 @@ const run = async () => {
         startDate: '01.07.23',
         dueDate:  '15.07.23',
         description: 'Create frontend for Shop page',
+    });
+
+    await Message.create({
+        user: userOne._id,
+        message: 'Hello world!',
+    }, {
+        user: userTwo._id,
+        message: 'Can i have any ticket?'
+    }, {
+        user: userThree._id,
+        message: 'Yes, please!'
     });
 
     await Task.create({

@@ -47,7 +47,6 @@ router.ws('/chat', async (ws) => {
     }
     ws.on('message', async (messages) => {
         const decodeMessage = JSON.parse(messages.toString()) as IncomingMessage;
-        console.log(decodeMessage);
         switch (decodeMessage.type) {
             case 'LOGOUT': {
                 console.log('Client disconnected! id =', id);

@@ -92,6 +92,9 @@ const ChatButton: React.FC<Props> = ({onlineUsers, ws, messages}) => {
                             <Grid item>
                                 <Grid container direction='column' justifyContent='space-around'>
                                     <Grid item height={380} overflow='auto'>
+                                        <Typography variant='h5' component='div' color='blue'>
+                                            Messages:
+                                        </Typography>
                                         {messages.map(item => (
                                             <Typography key={Math.random()*9999}>
                                                 <b>{item.user.displayName}:</b> {item.message}

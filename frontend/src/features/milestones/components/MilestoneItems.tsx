@@ -5,6 +5,7 @@ import {Divider, Typography} from '@mui/material';
 import MilestoneItem from './MilestoneItem';
 import {getProjectMilestones} from '../milestonesThunks';
 import {getProjectTasks} from '../../issues/issuesThunks';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 interface Props {
     projectId: string;
@@ -26,16 +27,16 @@ const MilestoneItems: React.FC<Props> = ({projectId}) => {
 
     return (
         <>
-            {fetchMilestonesLoading && <Typography>loading...</Typography>}
-                {milestones && milestones.length > 0 ? (
-                    milestones.map(item => (
-                        <MilestoneItem expended={expanded === item._id} handleChange={handleChange} key={item._id}
-                                       item={item}/>
-                    ))
-                ) : (
-                    <Typography>There are no milestones yet</Typography>
-                )}
-                <Divider/>
+            {fetchMilestonesLoading && <Spinner/>}
+            {milestones && milestones.length > 0 ? (
+                milestones.map(item => (
+                    <MilestoneItem expended={expanded === item._id} handleChange={handleChange} key={item._id}
+                                   item={item}/>
+                ))
+            ) : (
+                <Typography>There are no milestones yet</Typography>
+            )}
+            <Divider/>
         </>
     );
 };

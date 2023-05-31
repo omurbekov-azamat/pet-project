@@ -7,8 +7,11 @@ import User from '../models/User';
 import auth from '../middleware/auth';
 import permit from '../middleware/permit';
 import Project from '../models/Project';
+import {OAuth2Client} from 'google-auth-library';
+import config from '../config';
 
 const usersRouter = express.Router();
+const client = new OAuth2Client(config.google.clientId);
 
 usersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     try {
@@ -52,6 +55,45 @@ usersRouter.post('/sessions', async (req, res, next) => {
         return res.send({message: 'Username and password correct', user});
     } catch (error) {
         return next(error);
+    }
+});
+
+usersRouter.post("/google", async (req, res, next) => {
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.credential,
+            audience: config.google.clientId,
+        });
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(400).send({ error: "Google login error!" });
+        }
+
+        const email = payload["email"];
+        const id = payload["sub"];
+        const displayName = payload["name"];
+        const image = payload["picture"];
+        if (!email) {
+            return res
+                .status(400)
+                .send({ error: "Not enough user data to continue" });
+        }
+        let user = await User.findOne({ googleID: id });
+        if (!user) {
+            user = new User({
+                email: email,
+                password: crypto.randomUUID(),
+                googleID: id,
+                displayName,
+                role: 'developer',
+                avatar: image,
+            });
+        }
+        user.generateToken();
+        await user.save();
+        return res.send({ message: "Login with Google successful!", user });
+    } catch (e) {
+        return next(e);
     }
 });
 

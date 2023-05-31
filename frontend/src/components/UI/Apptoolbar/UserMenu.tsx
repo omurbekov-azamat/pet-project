@@ -30,12 +30,18 @@ const UserMenu: React.FC<Props> = ({user}) => {
         await dispatch(logout());
         await navigate('/');
     };
+    let image:string;
+    if (user.avatar && user.avatar.length < 50) {
+        image = user.avatar && apiURL + '/' + user.avatar;
+    } else {
+        image = user.avatar
+    }
 
     return (
         <>
             <Grid container>
                 <Grid item>
-                    <Avatar alt={user.displayName} src={user.avatar && apiURL + '/' + user.avatar}/>
+                    <Avatar alt={user.displayName} src={image}/>
                 </Grid>
                 <Grid item>
                     <Button

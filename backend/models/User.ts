@@ -48,7 +48,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     },
     online: {
         type: Boolean,
-        default: false,
+        default: true,
     },
 });
 

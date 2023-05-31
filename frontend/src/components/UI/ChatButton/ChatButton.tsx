@@ -62,6 +62,7 @@ const ChatButton: React.FC<Props> = ({onlineUsers, ws, messages}) => {
         e.preventDefault();
         if (user) {
             websocketSend(ws, 'SEND_MESSAGE', {_id: user._id, message: state});
+            setState('');
         }
     };
 

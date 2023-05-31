@@ -88,14 +88,6 @@ const ListGroup: React.FC<Props> = ({catchParams}) => {
                     <ListItemText primary="Projects"/>
                 </ListItemButton>
             </ListItem>
-            <ListItem disablePadding>
-                <ListItemButton onClick={() => moveBread('issues')}>
-                    <ListItemIcon>
-                        <DraftsIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Issues"/>
-                </ListItemButton>
-            </ListItem>
         </>
     );
 

@@ -90,7 +90,6 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Milestones" value="1"/>
                         {user && user.role === 'manager' && <Tab label="New milestone" value="2"/>}
-                        <Tab label="Item Three" value="3"/>
                     </TabList>
                 </Box>
                 <TabPanel value='1'><MilestoneItems projectId={catchParams.id}/></TabPanel>
@@ -115,6 +114,7 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                                         label="Select start date"
                                         value={state.startDate}
                                         onChange={handleStartDate}
+                                        sx={{width: '235px'}}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -122,6 +122,7 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                                         label="Select due date"
                                         value={state.dueDate}
                                         onChange={handleDueDate}
+                                        sx={{width: '235px'}}
                                     />
                                 </Grid>
                                 {required && (
@@ -153,7 +154,6 @@ const MilestonePage: React.FC<Props> = ({exist = initialState, catchParams}) => 
                         </LocalizationProvider>
                     </Box>
                 </TabPanel>
-                <TabPanel value='3'>Item Three</TabPanel>
             </TabContext>
         </Box>
     );

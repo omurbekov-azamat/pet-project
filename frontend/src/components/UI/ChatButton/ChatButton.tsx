@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    Badge,
     Button, Container, createTheme,
     Dialog,
     DialogContent,
@@ -8,7 +9,10 @@ import {
     ThemeProvider,
     Typography
 } from '@mui/material';
-import {Online} from '../../../types';
+import {Message, Online} from '../../../types';
+import {websocketSend} from '../../../helpers';
+import {useAppSelector} from '../../../app/hooks';
+import {selectUser} from '../../../features/users/usersSlice';
 
 const MyButton = styled(Button)({
     position: 'fixed',
@@ -35,12 +39,17 @@ const theme = createTheme({
 });
 
 interface Props {
-    onlineUsers: Online[]
+    onlineUsers: Online[];
+    messages: Message[];
+    ws: React.MutableRefObject<WebSocket | null>;
 }
 
-const ChatButton: React.FC<Props> = ({onlineUsers}) => {
+const ChatButton: React.FC<Props> = ({onlineUsers, ws, messages}) => {
     const [open, setOpen] = useState(false);
     const [state, setState] = useState('');
+
+    const user = useAppSelector(selectUser);
+
     const handleClick = () => {
         setOpen(true);
     };
@@ -51,20 +60,24 @@ const ChatButton: React.FC<Props> = ({onlineUsers}) => {
 
     const submitFormHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(state);
+        if (user) {
+            websocketSend(ws, 'SEND_MESSAGE', {_id: user._id, message: state});
+        }
     };
 
     return (
         <>
             <ThemeProvider theme={theme}>
                 <MyButton onClick={handleClick}>
-                    Chat
+                    <Badge badgeContent={onlineUsers.length} color="error">
+                        Chat
+                    </Badge>
                 </MyButton>
             </ThemeProvider>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogContent sx={{px: 1, py: 1}}>
                     <Container sx={{minWidth: '275px'}}>
-                        <Grid container flexDirection='column'>
+                        <Grid container flexDirection='column' spacing={3}>
                             <Grid item>
                                 <Typography variant='h5' component='div' color='red'>
                                     Online users:
@@ -78,33 +91,38 @@ const ChatButton: React.FC<Props> = ({onlineUsers}) => {
                             <Grid item>
                                 <Grid container direction='column' justifyContent='space-around'>
                                     <Grid item height={380} overflow='auto'>
-                                    </Grid>
-                                    <Grid item>
-                                        <form onSubmit={submitFormHandler}>
-                                            <Grid container direction='row' alignItems='center'>
-                                                <Grid item xs={8}>
-                                                    <TextField
-                                                        value={state}
-                                                        onChange={inputChangeHandler}
-                                                        label='Message'
-                                                        fullWidth={true}
-                                                        required
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                    <Button
-                                                        type='submit'
-                                                        color='warning'
-                                                        variant='contained'
-                                                        sx={{height: '55px', width: '100%'}}
-                                                    >
-                                                        Send
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                        </form>
+                                        {messages.map(item => (
+                                            <Typography key={item._id}>
+                                                <b>{item.user.displayName}:</b> {item.message}
+                                            </Typography>
+                                        ))}
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                            <Grid item>
+                                <form onSubmit={submitFormHandler}>
+                                    <Grid container direction='row' alignItems='center'>
+                                        <Grid item xs={8}>
+                                            <TextField
+                                                value={state}
+                                                onChange={inputChangeHandler}
+                                                label='Message'
+                                                fullWidth={true}
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Button
+                                                type='submit'
+                                                color='warning'
+                                                variant='contained'
+                                                sx={{height: '55px', width: '100%'}}
+                                            >
+                                                Send
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </form>
                             </Grid>
                         </Grid>
                     </Container>

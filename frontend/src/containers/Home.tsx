@@ -7,42 +7,47 @@ import ChatButton from '../components/UI/ChatButton/ChatButton';
 import {useAppSelector} from '../app/hooks';
 import {selectUser} from '../features/users/usersSlice';
 import {websocketSend} from '../helpers';
-import {IncomingMessage, Online} from '../types';
+import {IncomingMessage, Message, Online} from '../types';
 
 const Home = () => {
     const user = useAppSelector(selectUser);
 
     const [onlineUsers, setOnlineUsers] = useState<Online[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const ws = useRef<null | WebSocket>(null);
 
     const connect = useCallback(() => {
-            ws.current = new WebSocket('ws://localhost:8000/chat');
-            ws.current.onclose = (event) => {
-                if (event.type === 'close') {
-                    setTimeout(function () {
-                        connect();
-                    }, 1000);
-                }
-                console.log('ws closed');
-            };
-
-            ws.current.onmessage = (event) => {
-                const decodedMessage = JSON.parse(event.data) as IncomingMessage;
-                if (decodedMessage.type === 'ONLINE_USERS') {
-                    const users = decodedMessage.payload as Online[];
-                    setOnlineUsers(users);
-                }
+        ws.current = new WebSocket('ws://localhost:8000/chat');
+        ws.current.onclose = (event) => {
+            if (event.type === 'close') {
+                setTimeout(function () {
+                    connect();
+                }, 1000);
             }
+            console.log('ws closed');
+        };
 
-            return () => {
-                if (ws.current) {
-                    ws.current.close();
-                }
-            };
+        ws.current.onmessage = (event) => {
+            const decodedMessage = JSON.parse(event.data) as IncomingMessage;
+            if (decodedMessage.type === 'ONLINE_USERS') {
+                const users = decodedMessage.payload as Online[];
+                setOnlineUsers(users);
+            }
+            if (decodedMessage.type === 'SEND_MESSAGES') {
+                const messages = decodedMessage.payload as Message[];
+                setMessages(prev => (prev.concat(messages)));
+            }
+        }
+
+        return () => {
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
     }, [ws]);
 
     useEffect(() => {
-        if (user){
+        if (user) {
             connect();
         }
     }, [connect, user]);
@@ -60,7 +65,7 @@ const Home = () => {
                 <AppToolbar/>
             </header>
             <Container maxWidth="xl" component="main" sx={{flex: 1, m: 'auto'}}>
-                {user && <ChatButton onlineUsers={onlineUsers}/>}
+                {user && <ChatButton onlineUsers={onlineUsers} ws={ws} messages={messages}/>}
                 <Outlet/>
             </Container>
             <footer style={{flexShrink: 0}}>

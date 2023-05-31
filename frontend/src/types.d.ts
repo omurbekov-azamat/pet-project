@@ -117,7 +117,19 @@ export interface Online {
     displayName: string
 }
 
+export interface MessageMutation {
+    _id: string;
+    message: string;
+}
+
+export interface Message extends MessageMutation {
+    user: {
+        _id: string;
+        displayName: string;
+    }
+}
+
 export interface IncomingMessage {
     type: string;
-    payload: Online[];
+    payload: Online[] | Message[];
 }

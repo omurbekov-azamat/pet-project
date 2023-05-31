@@ -7,9 +7,10 @@ import usersRouter from './routers/users';
 import projectsRouter from './routers/projects';
 import tasksRouter from './routers/tasks';
 import milestonesRouter from './routers/milestones';
-import {ActiveConnections, IncomingMessage} from './types';
+import {ActiveConnections, IncomingMessage, UserMessage} from './types';
 import crypto from 'crypto';
 import User from './models/User';
+import Message from './models/Message';
 
 const app = express();
 const port = 8000;
@@ -41,7 +42,7 @@ router.ws('/chat', async (ws) => {
     }
     ws.on('message', async (messages) => {
         const decodeMessage = JSON.parse(messages.toString()) as IncomingMessage;
-        console.log(decodeMessage.type);
+        console.log(decodeMessage);
         switch (decodeMessage.type) {
             case 'LOGOUT': {
                 console.log('Client disconnected! id =', id);
@@ -57,7 +58,24 @@ router.ws('/chat', async (ws) => {
                     });
                 }
             }
-            break;
+                break;
+            case 'SEND_MESSAGE':
+                const responseMessage = decodeMessage.payload as UserMessage;
+
+                const message = new Message({
+                    user: responseMessage._id,
+                    message: responseMessage.message,
+                });
+                await message.save();
+                const result = await Message.findById(message._id).populate({path: 'user', select: 'displayName'});
+                Object.keys(activeConnections).forEach(id => {
+                    const conn = activeConnections[id];
+                    conn.send(JSON.stringify({
+                        type: 'SEND_MESSAGES',
+                        payload: [result]
+                    }));
+                });
+                break;
         }
     });
     ws.on('close', () => {

@@ -68,6 +68,7 @@ const Login: React.FC<Props> = ({exist = initialState}) => {
                                 label="Email"
                                 name="email"
                                 type='email'
+                                variant='standard'
                                 autoComplete="current-email"
                                 value={state.email}
                                 onChange={handleInputChange}
@@ -79,6 +80,7 @@ const Login: React.FC<Props> = ({exist = initialState}) => {
                                 label="Password"
                                 name="password"
                                 type="password"
+                                variant='standard'
                                 autoComplete="current-password"
                                 value={state.password}
                                 onChange={handleInputChange}

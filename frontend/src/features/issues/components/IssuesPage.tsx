@@ -142,6 +142,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                         label='Assignee'
                                         name='assignee'
                                         onChange={handleInputChange}
+                                        variant='standard'
                                         sx={{minWidth: 200}}
                                         error={Boolean(getFieldError('assignee'))}
                                     >
@@ -161,6 +162,7 @@ const IssuesPage: React.FC<Props> = ({catchParams, exist = initialState}) => {
                                         value={state.milestone}
                                         label='Milestone'
                                         name='milestone'
+                                        variant='standard'
                                         onChange={handleInputChange}
                                         sx={{minWidth: 200}}
                                         error={Boolean(getFieldError('milestone'))}

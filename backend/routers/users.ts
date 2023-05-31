@@ -46,6 +46,7 @@ usersRouter.post('/sessions', async (req, res, next) => {
     }
 
     try {
+        user.online = true;
         user.generateToken();
         await user.save();
         return res.send({message: 'Username and password correct', user});
@@ -81,13 +82,13 @@ usersRouter.get('/:id/developers', auth, permit('manager'), async (req, res, nex
 usersRouter.delete('/sessions', async (req, res, next) => {
     try {
         const token = req.get('Authorization');
-        const success = {message: 'OK'};
+        const success = { message: 'Success' };
 
         if (!token) {
             return res.send(success);
         }
 
-        const user = await User.findOne({token});
+        const user = await User.findOneAndUpdate({token}, {online: false}, {new: true});
 
         if (!user) {
             return res.send(success);
@@ -96,8 +97,8 @@ usersRouter.delete('/sessions', async (req, res, next) => {
         user.generateToken();
         await user.save();
         return res.send(success);
-    } catch (error) {
-        return next(error);
+    } catch (e) {
+        return next(e);
     }
 });
 

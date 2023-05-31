@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Button, Container, createTheme,
     Dialog,
@@ -8,6 +8,7 @@ import {
     ThemeProvider,
     Typography
 } from '@mui/material';
+import {Online} from '../../../types';
 
 const MyButton = styled(Button)({
     position: 'fixed',
@@ -33,10 +34,13 @@ const theme = createTheme({
     },
 });
 
-const ChatButton = () => {
+interface Props {
+    onlineUsers: Online[]
+}
+
+const ChatButton: React.FC<Props> = ({onlineUsers}) => {
     const [open, setOpen] = useState(false);
     const [state, setState] = useState('');
-
     const handleClick = () => {
         setOpen(true);
     };
@@ -49,32 +53,6 @@ const ChatButton = () => {
         e.preventDefault();
         console.log(state);
     };
-
-    const ws = useRef<null | WebSocket>(null);
-
-    const connect = useCallback(() => {
-        ws.current = new WebSocket('ws://localhost:8000/chat');
-        console.log('11111');
-
-        ws.current.onclose = (event) => {
-            if (event.type === 'close') {
-                setTimeout(function () {
-                    connect();
-                    console.log('close');
-                }, 1000);
-            }
-        };
-
-        return () => {
-            if (ws.current) {
-                ws.current.close();
-            }
-        };
-    }, [ws]);
-
-    useEffect(() => {
-        connect();
-    }, [connect]);
 
     return (
         <>
@@ -91,9 +69,11 @@ const ChatButton = () => {
                                 <Typography variant='h5' component='div' color='red'>
                                     Online users:
                                 </Typography>
-                                <Typography>
-                                    user1
-                                </Typography>
+                                {onlineUsers.map(item => (
+                                    <Typography key={item._id}>
+                                        <b>Name: </b> {item.displayName}
+                                    </Typography>
+                                ))}
                             </Grid>
                             <Grid item>
                                 <Grid container direction='column' justifyContent='space-around'>

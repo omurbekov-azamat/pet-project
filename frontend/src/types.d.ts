@@ -111,3 +111,13 @@ export interface Task {
         minutes: number;
     };
 }
+
+export interface Online {
+    _id: string;
+    displayName: string
+}
+
+export interface IncomingMessage {
+    type: string;
+    payload: Online[];
+}

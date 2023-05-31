@@ -8,3 +8,12 @@ export const Link = styled(NavLink)({
         color: 'inherit'
     },
 });
+
+export const websocketSend = (ws: React.MutableRefObject<WebSocket | null>, type: string, payload: string) => {
+    if (!ws.current) return;
+
+    ws.current?.send(JSON.stringify({
+        type,
+        payload,
+    }));
+};

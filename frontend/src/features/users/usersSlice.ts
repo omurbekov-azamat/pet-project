@@ -54,11 +54,11 @@ export const usersSlice = createSlice({
             state.loginError = error || null;
         });
         builder.addCase(logout.pending, (state) => {
-            state.user = null;
             state.logoutLoading = true;
         });
         builder.addCase(logout.fulfilled, (state) => {
             state.logoutLoading = false;
+            state.user = null;
         });
         builder.addCase(logout.rejected, (state) => {
             state.logoutLoading = false;

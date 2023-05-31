@@ -31,26 +31,31 @@ const run = async () => {
         password: '123',
         displayName: 'Азамат Омурбеков',
         token: crypto.randomUUID(),
+        role: 'developer'
     }, {
         email: 'user2@gmail.com',
         password: '123',
         displayName: 'Куон Валерий',
         token: crypto.randomUUID(),
+        role: 'developer'
     }, {
         email: 'user3@gmail.com',
         password: '123',
         displayName: 'Биктимиров Эдиль',
         token: crypto.randomUUID(),
+        role: 'developer'
     }, {
         email: 'user4@gmail.com',
         password: '123',
         displayName: 'Маркелов Артем',
         token: crypto.randomUUID(),
+        role: 'developer'
     }, {
         email: 'user5@gmail.com',
         password: '123',
         displayName: 'Акматалиев Нурдамир',
         token: crypto.randomUUID(),
+        role: 'developer'
     });
 
     const [booking, shop] = await Project.create({

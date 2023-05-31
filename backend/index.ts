@@ -7,9 +7,9 @@ import usersRouter from './routers/users';
 import projectsRouter from './routers/projects';
 import tasksRouter from './routers/tasks';
 import milestonesRouter from './routers/milestones';
-import {ActiveConnections, IncomingMessage, UserMessage} from './types';
-import Message from './models/Message';
+import {ActiveConnections, IncomingMessage} from './types';
 import crypto from 'crypto';
+import User from './models/User';
 
 const app = express();
 const port = 8000;
@@ -25,29 +25,39 @@ expressWs(app);
 
 const activeConnections: ActiveConnections = {};
 
-router.ws('/chat', (ws) => {
+router.ws('/chat', async (ws) => {
     const id = crypto.randomUUID();
     activeConnections[id] = ws;
     console.log('Client connected! id =', id);
+    const users = await User.find({online: true}).select('displayName');
+    if (users) {
+        Object.keys(activeConnections).forEach(id => {
+            const conn = activeConnections[id];
+            conn.send(JSON.stringify({
+                type: 'ONLINE_USERS',
+                payload: users,
+            }));
+        });
+    }
     ws.on('message', async (messages) => {
         const decodeMessage = JSON.parse(messages.toString()) as IncomingMessage;
+        console.log(decodeMessage.type);
         switch (decodeMessage.type) {
-            case 'SEND_MESSAGE':
-                const responseMessage = decodeMessage.payload as UserMessage;
-                const message = new Message({
-                    user: responseMessage._id,
-                    message: responseMessage.message,
-                });
-                await message.save();
-                const result = await Message.findById(message._id).populate({path: 'user', select: 'firstName'});
-                Object.keys(activeConnections).forEach(id => {
-                    const conn = activeConnections[id];
-                    conn.send(JSON.stringify({
-                        type: 'SEND_MESSAGES',
-                        payload: [result]
-                    }));
-                });
-                break;
+            case 'LOGOUT': {
+                console.log('Client disconnected! id =', id);
+                delete activeConnections[id];
+                const users = await User.find({online: true}).select('displayName');
+                if (users) {
+                    Object.keys(activeConnections).forEach(id => {
+                        const conn = activeConnections[id];
+                        conn.send(JSON.stringify({
+                            type: 'ONLINE_USERS',
+                            payload: users,
+                        }));
+                    });
+                }
+            }
+            break;
         }
     });
     ws.on('close', () => {

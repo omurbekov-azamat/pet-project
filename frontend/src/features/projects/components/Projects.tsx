@@ -33,7 +33,20 @@ const Projects = () => {
                 </Grid>
                 <Grid item>
                     {user && user.role === 'manager' &&
-                        <Button variant='contained' onClick={onClickHandler}>new project</Button>}
+                        <Button
+                            className='Btn'
+                            onClick={onClickHandler}
+                            variant='contained'
+                            sx={{
+                                borderRadius: '45px',
+                                backgroundColor: 'rgb(151, 95, 255)',
+                                '&:hover': {
+                                    backgroundColor: 'rgb(151, 95, 255)',
+                                },
+                            }}
+                        >
+                            new project
+                        </Button>}
                 </Grid>
             </Grid>
             <Typography>

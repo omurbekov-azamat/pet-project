@@ -110,8 +110,16 @@ const ProjectDevelopers = () => {
                         <Grid item>
                             <LoadingButton
                                 loading={loading}
+                                className='Btn'
                                 onClick={handleOnClickAddDeveloper}
                                 variant='contained'
+                                sx={{
+                                    borderRadius: '45px',
+                                    backgroundColor: '#ff135a',
+                                    '&:hover': {
+                                        backgroundColor: '#ff135a',
+                                    },
+                                }}
                             >
                                 Add developers
                             </LoadingButton>

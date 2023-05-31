@@ -8,6 +8,7 @@ import {persistor, store} from './app/store';
 import {addInterceptors} from './axiosApi';
 import {GoogleOAuthProvider} from '@react-oauth/google';
 import {GOOGLE_CLIENT_ID} from './constants';
+import './style.css';
 
 addInterceptors(store);
 

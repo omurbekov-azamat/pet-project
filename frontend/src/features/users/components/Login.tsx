@@ -11,8 +11,8 @@ import Alert from '@mui/material/Alert'
 import {LoginMutation, RegisterMutation} from '../../../types';
 
 const initialState: LoginMutation = {
-    email: '',
-    password: '',
+    email: 'manager@gmail.com',
+    password: '123',
 };
 
 interface Props {
